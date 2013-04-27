@@ -9,10 +9,10 @@
     <name>brain-invoice application</name>
 
     <modules>
+	<module>brain-invoice-model</module>
         <module>brain-invoice-ejb</module>
         <module>brain-invoice-web</module>
         <module>brain-invoice-ear</module>
-        <module>brain-invoice-model</module>
     </modules>
 
     <properties>
