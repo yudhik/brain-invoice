@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.brainmaster.apps.invoicing.model.id.BrandAccountKeys;
 
 @Entity
@@ -75,7 +77,7 @@ public class Brand implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Brand [keys=" + keys.toString() + "]";
+		return new ToStringBuilder(this).append(keys.toString()).toString();
 	}
 
 	
