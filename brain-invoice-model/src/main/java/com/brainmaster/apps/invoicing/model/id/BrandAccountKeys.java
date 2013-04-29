@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.brainmaster.apps.invoicing.model.Account;
 
@@ -54,11 +55,9 @@ public class BrandAccountKeys extends AccountKeys implements Serializable {
 		return new EqualsBuilder().appendSuper(super.equals(other))
 				.append(brandName, other.getBrandName()).isEquals();
 	}
-
+	
 	@Override
 	public String toString() {
-		return "BrandAccountKeys [account=" + getAccount().getAccountId()
-				+ ", brandName=" + brandName + "]";
+		return ToStringBuilder.reflectionToString(this);
 	}
-
 }

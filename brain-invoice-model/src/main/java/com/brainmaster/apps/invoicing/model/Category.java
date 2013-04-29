@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.brainmaster.apps.invoicing.model.id.CategoryAccountKeys;
 
 @Entity
@@ -116,10 +118,6 @@ public class Category implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Category [keys=" + keys.toString() + ", parentCategory=" + parentCategory
-				+ "]";
+		return new ToStringBuilder(this).append(keys).append(parentCategory).toString();
 	}
-
-	
-
 }

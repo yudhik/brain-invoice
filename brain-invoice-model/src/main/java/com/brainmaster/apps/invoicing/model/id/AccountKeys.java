@@ -4,6 +4,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.brainmaster.apps.invoicing.model.Account;
 
 @MappedSuperclass
@@ -52,8 +54,6 @@ public abstract class AccountKeys {
 
 	@Override
 	public String toString() {
-		return "AccountKeys [account=" + account + "]";
+		return ToStringBuilder.reflectionToString(this);
 	}
-	
-	
 }
