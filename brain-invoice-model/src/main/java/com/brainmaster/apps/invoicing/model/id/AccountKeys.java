@@ -5,7 +5,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.brainmaster.apps.invoicing.model.Account;
 
 @MappedSuperclass
