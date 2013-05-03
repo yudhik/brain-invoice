@@ -1,37 +1,40 @@
 package com.brainmaster.apps.invoicing.model;
 
 import java.io.Serializable;
-import java.util.UUID;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.PrimaryKeyJoinColumns;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.hibernate.annotations.Type;
 
 import com.brainmaster.apps.invoicing.model.ext.BankInformation;
 import com.brainmaster.apps.invoicing.model.ext.CompanyInformation;
-import com.brainmaster.util.DatabaseColumnConstant;
-import com.brainmaster.util.helper.uuid.UUIDHelper;
+import com.brainmaster.apps.invoicing.model.id.StoreAccountKeys;
 
 @Entity
 @Table(name = "store_detail")
 public class StoreDetail implements Serializable {
 
 	private static final long serialVersionUID = -1462474216780036654L;
+	
+	@EmbeddedId
+	@AttributeOverrides({
+        @AttributeOverride(name="account_id", column=@Column(name="account_id")),
+        @AttributeOverride(name="uuid", column=@Column(name="uuid"))
+    })
+	private StoreAccountKeys storeAccountKeys;
 
-	@Id
-	@Type(type = "uuid")
-	@Column(length = DatabaseColumnConstant.SIZE_UUID)
-	private UUID uuid;
-
-	@OneToOne(targetEntity = Store.class)
-	@JoinColumn(name = "uuid", referencedColumnName = "uuid")
+	@OneToOne(optional=true)
+	@PrimaryKeyJoinColumns({
+		@PrimaryKeyJoinColumn(name = "account_id"),
+		@PrimaryKeyJoinColumn(name = "uuid")
+	})
 	private Store store;
 
 	@Embedded
@@ -43,28 +46,14 @@ public class StoreDetail implements Serializable {
 	public StoreDetail() {
 	}
 
-	public StoreDetail(UUID uuid, Store store,
+	public StoreDetail(Store store,
 			CompanyInformation companyInformation,
 			BankInformation bankInformation) {
-		this.uuid = uuid;
 		this.store = store;
 		this.companyInformation = companyInformation;
 		this.bankInformation = bankInformation;
 	}
-
-	@Transient
-	public String getId() {
-		return UUIDHelper.uuidToString(uuid);
-	}
 	
-	public UUID getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
-	}
-
 	public Store getStore() {
 		return store;
 	}
@@ -89,4 +78,59 @@ public class StoreDetail implements Serializable {
 		this.bankInformation = bankInformation;
 	}
 
+	public StoreAccountKeys getStoreAccountKeys() {
+		return storeAccountKeys;
+	}
+
+	public void setStoreAccountKeys(StoreAccountKeys storeAccountKeys) {
+		this.storeAccountKeys = storeAccountKeys;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((bankInformation == null) ? 0 : bankInformation.hashCode());
+		result = prime
+				* result
+				+ ((companyInformation == null) ? 0 : companyInformation
+						.hashCode());
+		result = prime * result + ((store == null) ? 0 : store.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StoreDetail other = (StoreDetail) obj;
+		if (bankInformation == null) {
+			if (other.bankInformation != null)
+				return false;
+		} else if (!bankInformation.equals(other.bankInformation))
+			return false;
+		if (companyInformation == null) {
+			if (other.companyInformation != null)
+				return false;
+		} else if (!companyInformation.equals(other.companyInformation))
+			return false;
+		if (store == null) {
+			if (other.store != null)
+				return false;
+		} else if (!store.equals(other.store))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "StoreDetail [store=" + store + ", companyInformation="
+				+ companyInformation + ", bankInformation=" + bankInformation
+				+ "]";
+	}
 }

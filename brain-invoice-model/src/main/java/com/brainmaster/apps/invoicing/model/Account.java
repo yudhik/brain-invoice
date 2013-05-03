@@ -143,7 +143,6 @@ public class Account implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Account [emailAddress=" + emailAddress + ", accountId="
-				+ getAccountId() + "]";
+		return "Account [emailAddress=" + emailAddress + ", accountId=" + getAccountId() + "]";
 	}
 }

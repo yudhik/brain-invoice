@@ -139,4 +139,103 @@ public class CompanyInformation implements Serializable {
 		this.mobileNumber = mobileNumber;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((address1 == null) ? 0 : address1.hashCode());
+		result = prime * result
+				+ ((address2 == null) ? 0 : address2.hashCode());
+		result = prime * result
+				+ ((address3 == null) ? 0 : address3.hashCode());
+		result = prime * result + ((city == null) ? 0 : city.hashCode());
+		result = prime * result
+				+ ((emailAddress == null) ? 0 : emailAddress.hashCode());
+		result = prime * result
+				+ ((faxNumber == null) ? 0 : faxNumber.hashCode());
+		result = prime * result
+				+ ((mobileNumber == null) ? 0 : mobileNumber.hashCode());
+		result = prime * result
+				+ ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
+		result = prime * result
+				+ ((postalCode == null) ? 0 : postalCode.hashCode());
+		result = prime * result
+				+ ((province == null) ? 0 : province.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CompanyInformation other = (CompanyInformation) obj;
+		if (address1 == null) {
+			if (other.address1 != null)
+				return false;
+		} else if (!address1.equals(other.address1))
+			return false;
+		if (address2 == null) {
+			if (other.address2 != null)
+				return false;
+		} else if (!address2.equals(other.address2))
+			return false;
+		if (address3 == null) {
+			if (other.address3 != null)
+				return false;
+		} else if (!address3.equals(other.address3))
+			return false;
+		if (city == null) {
+			if (other.city != null)
+				return false;
+		} else if (!city.equals(other.city))
+			return false;
+		if (emailAddress == null) {
+			if (other.emailAddress != null)
+				return false;
+		} else if (!emailAddress.equals(other.emailAddress))
+			return false;
+		if (faxNumber == null) {
+			if (other.faxNumber != null)
+				return false;
+		} else if (!faxNumber.equals(other.faxNumber))
+			return false;
+		if (mobileNumber == null) {
+			if (other.mobileNumber != null)
+				return false;
+		} else if (!mobileNumber.equals(other.mobileNumber))
+			return false;
+		if (phoneNumber == null) {
+			if (other.phoneNumber != null)
+				return false;
+		} else if (!phoneNumber.equals(other.phoneNumber))
+			return false;
+		if (postalCode == null) {
+			if (other.postalCode != null)
+				return false;
+		} else if (!postalCode.equals(other.postalCode))
+			return false;
+		if (province == null) {
+			if (other.province != null)
+				return false;
+		} else if (!province.equals(other.province))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "CompanyInformation [address1=" + address1 + ", address2="
+				+ address2 + ", address3=" + address3 + ", postalCode="
+				+ postalCode + ", city=" + city + ", province=" + province
+				+ ", emailAddress=" + emailAddress + ", phoneNumber="
+				+ phoneNumber + ", faxNumber=" + faxNumber + ", mobileNumber="
+				+ mobileNumber + "]";
+	}
+
+	
 }

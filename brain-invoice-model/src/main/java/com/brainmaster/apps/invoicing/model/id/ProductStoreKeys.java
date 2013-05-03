@@ -4,10 +4,16 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
+import com.brainmaster.apps.invoicing.model.Account;
+
 @Embeddable
-public class ProductStoreKeys implements Serializable {
+public class ProductStoreKeys extends AccountKeys implements Serializable {
 
 	private static final long serialVersionUID = 5178347163876248031L;
+	
+	public ProductStoreKeys(Account account) {
+		super(account);
+	}
 
 //	@ManyToOne(targetEntity = Product.class)
 //	@JoinColumn(name = "product_id")

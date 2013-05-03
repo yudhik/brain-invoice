@@ -4,37 +4,23 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.brainmaster.apps.invoicing.model.Account;
 
 @Embeddable
-public class ProductAccountKeys implements Serializable {
+public class ProductAccountKeys extends AccountKeys implements Serializable {
 
 	private static final long serialVersionUID = -7094180747931635859L;
-	
-	@ManyToOne(targetEntity = Account.class)
-	@JoinColumn(name = "account_id")
-	private Account account;
-	
+
 	@Column(name = "product_code")
 	private String productCode;
-	
-	public ProductAccountKeys() {
-	}
 
 	public ProductAccountKeys(Account account, String productCode) {
-		this.account = account;
+		super(account);
 		this.productCode = productCode;
-	}
-
-	public Account getAccount() {
-		return account;
-	}
-
-	public void setAccount(Account account) {
-		this.account = account;
 	}
 
 	public String getProductCode() {
@@ -49,7 +35,7 @@ public class ProductAccountKeys implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((account == null) ? 0 : account.hashCode());
+		result = super.hashCode();
 		result = prime * result
 				+ ((productCode == null) ? 0 : productCode.hashCode());
 		return result;
@@ -64,25 +50,13 @@ public class ProductAccountKeys implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		ProductAccountKeys other = (ProductAccountKeys) obj;
-		if (account == null) {
-			if (other.account != null)
-				return false;
-		} else if (!account.equals(other.account))
-			return false;
-		if (productCode == null) {
-			if (other.productCode != null)
-				return false;
-		} else if (!productCode.equals(other.productCode))
-			return false;
-		return true;
+		return new EqualsBuilder().appendSuper(super.equals(other))
+				.append(productCode, other.getProductCode()).isEquals();
 	}
 
 	@Override
 	public String toString() {
-		return "ProductAccountKeys [account=" + account.getAccountId() + ", productCode="
-				+ productCode + "]";
+		return ToStringBuilder.reflectionToString(this);
 	}
-	
-	
 
 }
