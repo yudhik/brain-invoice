@@ -26,7 +26,7 @@ import com.brainmaster.util.types.UUIDType;
 @TypeDefs({@TypeDef(name = "uuid", typeClass = UUIDType.class)})
 @Table(name = "account")
 @NamedQueries({
-		@NamedQuery(name = "account-with-email", query = "from Account a where a.emailAddress = :email"),
+		@NamedQuery(name = "account-with-email", query = "from Account a where a.emailAddress = :email")
 })
 public class Account implements Serializable {
 
@@ -143,7 +143,6 @@ public class Account implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Account [emailAddress=" + emailAddress + ", accountId="
-				+ getAccountId() + "]";
+		return "Account [emailAddress=" + emailAddress + ", accountId=" + getAccountId() + "]";
 	}
 }

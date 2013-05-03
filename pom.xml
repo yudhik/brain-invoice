@@ -9,7 +9,7 @@
     <name>brain-invoice application</name>
 
     <modules>
-	<module>brain-invoice-model</module>
+		<module>brain-invoice-model</module>
         <module>brain-invoice-ejb</module>
         <module>brain-invoice-web</module>
         <module>brain-invoice-ear</module>
@@ -29,6 +29,8 @@
             to work with JBoss EAP 6. It requires you have access to the JBoss EAP 6 
             maven repository. -->
         <!-- <jboss.bom.version>1.0.0.M12-redhat-1</jboss.bom.version>> -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <dependencyManagement>
@@ -83,6 +85,22 @@
 	            <scope>import</scope>
 	            <type>pom</type>
 	        </dependency>
+			
+			<dependency>
+				<groupId>org.jboss.shrinkwrap.resolver</groupId>
+				<artifactId>shrinkwrap-resolver-bom</artifactId>
+				<version>2.0.0-alpha-1</version>
+				<scope>test</scope>
+				<type>pom</type>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.jboss.shrinkwrap.resolver</groupId>
+				<artifactId>shrinkwrap-resolver-depchain</artifactId>
+				<version>1.1.0-alpha-2</version>
+				<scope>test</scope>
+				<type>pom</type>
+			</dependency>
 
         </dependencies>
     </dependencyManagement>
