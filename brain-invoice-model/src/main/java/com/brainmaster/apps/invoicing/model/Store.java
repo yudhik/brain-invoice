@@ -7,9 +7,9 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -18,11 +18,10 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.brainmaster.apps.invoicing.model.ext.StoreType;
-import com.brainmaster.util.DatabaseColumnConstant;
+import com.brainmaster.apps.invoicing.model.id.StoreAccountKeys;
 import com.brainmaster.util.helper.uuid.UUIDHelper;
 
 @Entity
@@ -31,10 +30,8 @@ public class Store implements Serializable {
 
 	private static final long serialVersionUID = 5947838295063055068L;
 
-	@Id
-	@Type(type = "uuid")
-	@Column(length = DatabaseColumnConstant.SIZE_UUID)
-	private UUID uuid;
+	@EmbeddedId
+	private StoreAccountKeys keys;
 
 	@NotNull
 	@NotBlank
@@ -75,14 +72,14 @@ public class Store implements Serializable {
 	public Store() {
 	}
 
-	public Store(UUID uuid, String storeName, StoreType storeType) {
-		this.uuid = uuid;
+	public Store(Account account, UUID uuid, String storeName, StoreType storeType) {
+		keys = new StoreAccountKeys(account, uuid);
 		this.storeName = storeName;
 		this.storeType = storeType;
 	}
 
-	public Store(UUID uuid, String storeName, StoreType storeType, String contactFirstName, String contactLastName) {
-		this.uuid = uuid;
+	public Store(Account account, UUID uuid, String storeName, StoreType storeType, String contactFirstName, String contactLastName) {
+		keys = new StoreAccountKeys(account, uuid);
 		this.storeName = storeName;
 		this.storeType = storeType;
 		this.contactFirstName = contactFirstName;
@@ -90,20 +87,22 @@ public class Store implements Serializable {
 	}
 
 	@Transient
-	public String getId() {
-		return UUIDHelper.uuidToString(uuid);
-	}
-	
-	public UUID getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
+	public String getStoreId() {
+		if(keys != null)
+			return UUIDHelper.uuidToString(keys.getUuid());
+		return null;
 	}
 
 	public Store getParentStore() {
 		return parentStore;
+	}
+
+	public StoreAccountKeys getKeys() {
+		return keys;
+	}
+
+	public void setKeys(StoreAccountKeys keys) {
+		this.keys = keys;
 	}
 
 	public void setParentStore(Store parentStore) {
@@ -170,7 +169,23 @@ public class Store implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
+		result = prime * result + ((account == null) ? 0 : account.hashCode());
+		result = prime * result
+				+ ((childStores == null) ? 0 : childStores.hashCode());
+		result = prime
+				* result
+				+ ((contactFirstName == null) ? 0 : contactFirstName.hashCode());
+		result = prime * result
+				+ ((contactLastName == null) ? 0 : contactLastName.hashCode());
+		result = prime * result + ((keys == null) ? 0 : keys.hashCode());
+		result = prime * result
+				+ ((parentStore == null) ? 0 : parentStore.hashCode());
+		result = prime * result
+				+ ((storeDetail == null) ? 0 : storeDetail.hashCode());
+		result = prime * result
+				+ ((storeName == null) ? 0 : storeName.hashCode());
+		result = prime * result
+				+ ((storeType == null) ? 0 : storeType.hashCode());
 		return result;
 	}
 
@@ -183,13 +198,58 @@ public class Store implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Store other = (Store) obj;
-		if (uuid == null) {
-			if (other.uuid != null)
+		if (account == null) {
+			if (other.account != null)
 				return false;
-		} else if (!uuid.equals(other.uuid))
+		} else if (!account.equals(other.account))
+			return false;
+		if (childStores == null) {
+			if (other.childStores != null)
+				return false;
+		} else if (!childStores.equals(other.childStores))
+			return false;
+		if (contactFirstName == null) {
+			if (other.contactFirstName != null)
+				return false;
+		} else if (!contactFirstName.equals(other.contactFirstName))
+			return false;
+		if (contactLastName == null) {
+			if (other.contactLastName != null)
+				return false;
+		} else if (!contactLastName.equals(other.contactLastName))
+			return false;
+		if (keys == null) {
+			if (other.keys != null)
+				return false;
+		} else if (!keys.equals(other.keys))
+			return false;
+		if (parentStore == null) {
+			if (other.parentStore != null)
+				return false;
+		} else if (!parentStore.equals(other.parentStore))
+			return false;
+		if (storeDetail == null) {
+			if (other.storeDetail != null)
+				return false;
+		} else if (!storeDetail.equals(other.storeDetail))
+			return false;
+		if (storeName == null) {
+			if (other.storeName != null)
+				return false;
+		} else if (!storeName.equals(other.storeName))
+			return false;
+		if (storeType != other.storeType)
 			return false;
 		return true;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Store [keys=" + keys + ", storeName=" + storeName
+				+ ", storeType=" + storeType + ", contactFirstName="
+				+ contactFirstName + ", contactLastName=" + contactLastName
+				+ ", storeDetail=" + storeDetail + ", parentStore="
+				+ parentStore + ", account=" + account + ", childStores="
+				+ childStores + "]";
+	}
 }

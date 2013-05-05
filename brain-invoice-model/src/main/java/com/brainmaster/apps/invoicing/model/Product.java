@@ -149,7 +149,18 @@ public class Product implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((barcodeNumber == null) ? 0 : barcodeNumber.hashCode());
+		result = prime * result + ((brand == null) ? 0 : brand.hashCode());
+		result = prime * result
+				+ ((category == null) ? 0 : category.hashCode());
 		result = prime * result + ((keys == null) ? 0 : keys.hashCode());
+		result = prime * result
+				+ ((packageCode == null) ? 0 : packageCode.hashCode());
+		result = prime * result
+				+ ((productName == null) ? 0 : productName.hashCode());
+		result = prime * result
+				+ ((systemUuid == null) ? 0 : systemUuid.hashCode());
 		return result;
 	}
 
@@ -162,22 +173,49 @@ public class Product implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Product other = (Product) obj;
+		if (barcodeNumber == null) {
+			if (other.barcodeNumber != null)
+				return false;
+		} else if (!barcodeNumber.equals(other.barcodeNumber))
+			return false;
+		if (brand == null) {
+			if (other.brand != null)
+				return false;
+		} else if (!brand.equals(other.brand))
+			return false;
+		if (category == null) {
+			if (other.category != null)
+				return false;
+		} else if (!category.equals(other.category))
+			return false;
 		if (keys == null) {
 			if (other.keys != null)
 				return false;
 		} else if (!keys.equals(other.keys))
+			return false;
+		if (packageCode == null) {
+			if (other.packageCode != null)
+				return false;
+		} else if (!packageCode.equals(other.packageCode))
+			return false;
+		if (productName == null) {
+			if (other.productName != null)
+				return false;
+		} else if (!productName.equals(other.productName))
+			return false;
+		if (systemUuid == null) {
+			if (other.systemUuid != null)
+				return false;
+		} else if (!systemUuid.equals(other.systemUuid))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Product [keys=" + keys + ", systemUuid=" + getSystemId()
+		return "Product [keys=" + keys + ", systemUuid=" + systemUuid
 				+ ", productName=" + productName + ", barcodeNumber="
 				+ barcodeNumber + ", packageCode=" + packageCode + ", brand="
 				+ brand + ", category=" + category + "]";
 	}
-	
-	
-
 }

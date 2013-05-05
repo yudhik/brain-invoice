@@ -14,4 +14,5 @@ public enum DocumentType {
 		return shortCall;
 	}
 	
+	
 }
