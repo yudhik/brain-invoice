@@ -17,6 +17,10 @@ public class BrandAccountKeys extends AccountKeys implements Serializable {
 	@Column(name = "brand_name")
 	private String brandName;
 
+	@Deprecated
+	public BrandAccountKeys() {
+	}
+
 	public BrandAccountKeys(Account account, String brandName) {
 		super(account);
 		this.brandName = brandName;

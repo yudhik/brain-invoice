@@ -88,8 +88,6 @@ public class Category implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((childCategories == null) ? 0 : childCategories.hashCode());
 		result = prime * result + ((keys == null) ? 0 : keys.hashCode());
 		return result;
 	}
@@ -103,11 +101,6 @@ public class Category implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Category other = (Category) obj;
-		if (childCategories == null) {
-			if (other.childCategories != null)
-				return false;
-		} else if (!childCategories.equals(other.childCategories))
-			return false;
 		if (keys == null) {
 			if (other.keys != null)
 				return false;

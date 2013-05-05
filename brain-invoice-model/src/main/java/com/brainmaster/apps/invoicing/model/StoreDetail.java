@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.PrimaryKeyJoinColumns;
@@ -30,7 +31,7 @@ public class StoreDetail implements Serializable {
     })
 	private StoreAccountKeys storeAccountKeys;
 
-	@OneToOne(optional=true)
+	@OneToOne(optional=true, fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumns({
 		@PrimaryKeyJoinColumn(name = "account_id"),
 		@PrimaryKeyJoinColumn(name = "uuid")
@@ -50,6 +51,7 @@ public class StoreDetail implements Serializable {
 			CompanyInformation companyInformation,
 			BankInformation bankInformation) {
 		this.store = store;
+		this.storeAccountKeys = store.getKeys();
 		this.companyInformation = companyInformation;
 		this.bankInformation = bankInformation;
 	}
@@ -90,13 +92,9 @@ public class StoreDetail implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((bankInformation == null) ? 0 : bankInformation.hashCode());
 		result = prime
 				* result
-				+ ((companyInformation == null) ? 0 : companyInformation
-						.hashCode());
-		result = prime * result + ((store == null) ? 0 : store.hashCode());
+				+ ((storeAccountKeys == null) ? 0 : storeAccountKeys.hashCode());
 		return result;
 	}
 
@@ -109,28 +107,20 @@ public class StoreDetail implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		StoreDetail other = (StoreDetail) obj;
-		if (bankInformation == null) {
-			if (other.bankInformation != null)
+		if (storeAccountKeys == null) {
+			if (other.storeAccountKeys != null)
 				return false;
-		} else if (!bankInformation.equals(other.bankInformation))
-			return false;
-		if (companyInformation == null) {
-			if (other.companyInformation != null)
-				return false;
-		} else if (!companyInformation.equals(other.companyInformation))
-			return false;
-		if (store == null) {
-			if (other.store != null)
-				return false;
-		} else if (!store.equals(other.store))
+		} else if (!storeAccountKeys.equals(other.storeAccountKeys))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "StoreDetail [store=" + store + ", companyInformation="
-				+ companyInformation + ", bankInformation=" + bankInformation
-				+ "]";
+		return "StoreDetail [storeAccountKeys=" + storeAccountKeys + ", store="
+				+ store + ", companyInformation=" + companyInformation
+				+ ", bankInformation=" + bankInformation + "]";
 	}
+
+	
 }

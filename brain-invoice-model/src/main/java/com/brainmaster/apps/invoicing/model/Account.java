@@ -1,13 +1,16 @@
 package com.brainmaster.apps.invoicing.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -23,57 +26,68 @@ import com.brainmaster.util.helper.uuid.UUIDHelper;
 import com.brainmaster.util.types.UUIDType;
 
 @Entity
-@TypeDefs({@TypeDef(name = "uuid", typeClass = UUIDType.class)})
+@TypeDefs({ @TypeDef(name = "uuid", typeClass = UUIDType.class) })
 @Table(name = "account")
-@NamedQueries({
-		@NamedQuery(name = "account-with-email", query = "from Account a where a.emailAddress = :email")
-})
 public class Account implements Serializable {
 
 	private static final long serialVersionUID = 5856204102955357752L;
-	
+
 	@Id
 	@Type(type = "uuid")
 	@Column(name = "account_uuid", length = DatabaseColumnConstant.SIZE_UUID)
 	private UUID accountUuid;
-	
+
 	@NotNull
 	@Email
-	@Column(name = "email_address", unique = true)
-	private String emailAddress;
-	
+	@Column(name = "registration_address", unique = true)
+	private String registrationEmailAddress;
+
 	@NotBlank
-	@Column(name = "first_name", length = DatabaseColumnConstant.SIZE_FIRSTNAME)
-	private String firstName;
+	@Column(name = "registration_first_name", length = DatabaseColumnConstant.SIZE_FIRSTNAME)
+	private String resitrationFirstName;
+
+	@Column(name = "registration_last_name", length = DatabaseColumnConstant.SIZE_LASTNAME)
+	private String registrationLastName;
+
+	@OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Brand> brands = new ArrayList<Brand>();
 	
-	@Column(name = "last_name", length = DatabaseColumnConstant.SIZE_LASTNAME)
-	private String lastName;
+	@OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Category> categories = new ArrayList<Category>();
+
+	@OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<PackagingUnit> packagingUnits = new ArrayList<PackagingUnit>();
 	
-//	@OneToMany(mappedBy = "account_uuid", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private List<Store> stores = new ArrayList<Store>();
+	@OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Product> products = new ArrayList<Product>();
 	
-	
+	@OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Store> stores = new ArrayList<Store>();
+
+	@OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<User> users = new ArrayList<User>();
+
 	public Account() {
 	}
-	
+
 	public Account(String emailAddress, String firstName, String lastName) {
 		this.accountUuid = UUID.randomUUID();
-		this.emailAddress = emailAddress;
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.registrationEmailAddress = emailAddress;
+		this.resitrationFirstName = firstName;
+		this.registrationLastName = lastName;
 	}
 
 	@Transient
 	public String getAccountId() {
 		return UUIDHelper.uuidToString(accountUuid);
 	}
-	
+
 	public String getEmailAddress() {
-		return emailAddress;
+		return registrationEmailAddress;
 	}
 
 	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
+		this.registrationEmailAddress = emailAddress;
 	}
 
 	public UUID getAccountUuid() {
@@ -84,29 +98,77 @@ public class Account implements Serializable {
 		this.accountUuid = accountUuid;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public String getRegistrationEmailAddress() {
+		return registrationEmailAddress;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setRegistrationEmailAddress(String registrationEmailAddress) {
+		this.registrationEmailAddress = registrationEmailAddress;
 	}
 
-	public String getLastName() {
-		return lastName;
+	public String getResitrationFirstName() {
+		return resitrationFirstName;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setResitrationFirstName(String resitrationFirstName) {
+		this.resitrationFirstName = resitrationFirstName;
 	}
 
-//	public List<Store> getStores() {
-//		return stores;
-//	}
-//
-//	public void setStores(List<Store> stores) {
-//		this.stores = stores;
-//	}
+	public String getRegistrationLastName() {
+		return registrationLastName;
+	}
+
+	public void setRegistrationLastName(String registrationLastName) {
+		this.registrationLastName = registrationLastName;
+	}
+
+	public List<Brand> getBrands() {
+		return brands;
+	}
+
+	public void setBrands(List<Brand> brands) {
+		this.brands = brands;
+	}
+
+	public List<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
+
+	public List<PackagingUnit> getPackagingUnits() {
+		return packagingUnits;
+	}
+
+	public void setPackagingUnits(List<PackagingUnit> packagingUnits) {
+		this.packagingUnits = packagingUnits;
+	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
+	public List<Store> getStores() {
+		return stores;
+	}
+
+	public void setStores(List<Store> stores) {
+		this.stores = stores;
+	}
+
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
 
 	@Override
 	public int hashCode() {
@@ -114,8 +176,10 @@ public class Account implements Serializable {
 		int result = 1;
 		result = prime * result
 				+ ((accountUuid == null) ? 0 : accountUuid.hashCode());
-		result = prime * result
-				+ ((emailAddress == null) ? 0 : emailAddress.hashCode());
+		result = prime
+				* result
+				+ ((registrationEmailAddress == null) ? 0
+						: registrationEmailAddress.hashCode());
 		return result;
 	}
 
@@ -133,16 +197,18 @@ public class Account implements Serializable {
 				return false;
 		} else if (!accountUuid.equals(other.accountUuid))
 			return false;
-		if (emailAddress == null) {
-			if (other.emailAddress != null)
+		if (registrationEmailAddress == null) {
+			if (other.registrationEmailAddress != null)
 				return false;
-		} else if (!emailAddress.equals(other.emailAddress))
+		} else if (!registrationEmailAddress
+				.equals(other.registrationEmailAddress))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Account [emailAddress=" + emailAddress + ", accountId=" + getAccountId() + "]";
+		return "Account [emailAddress=" + registrationEmailAddress
+				+ ", accountId=" + getAccountId() + "]";
 	}
 }

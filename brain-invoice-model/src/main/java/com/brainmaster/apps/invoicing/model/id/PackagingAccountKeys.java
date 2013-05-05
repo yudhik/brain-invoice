@@ -19,6 +19,10 @@ public class PackagingAccountKeys extends AccountKeys implements Serializable {
 	@Column(name = "packaging_id")
 	private String packagingId;
 
+	@Deprecated
+	public PackagingAccountKeys() {
+	}
+
 	public PackagingAccountKeys(Account account, String packagingId) {
 		super(account);
 		this.packagingId = packagingId;

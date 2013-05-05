@@ -16,6 +16,10 @@ public class CategoryAccountKeys extends AccountKeys implements Serializable {
 	@Column(name = "category_name")
 	private String categoryName;
 
+	@Deprecated
+	public CategoryAccountKeys() {
+	}
+
 	public CategoryAccountKeys(Account account, String categoryName) {
 		super(account);
 		this.categoryName = categoryName;

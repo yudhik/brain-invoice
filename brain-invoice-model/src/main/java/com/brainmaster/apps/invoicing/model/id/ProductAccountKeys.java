@@ -18,6 +18,10 @@ public class ProductAccountKeys extends AccountKeys implements Serializable {
 	@Column(name = "product_code")
 	private String productCode;
 
+	@Deprecated
+	public ProductAccountKeys() {
+	}
+
 	public ProductAccountKeys(Account account, String productCode) {
 		super(account);
 		this.productCode = productCode;
