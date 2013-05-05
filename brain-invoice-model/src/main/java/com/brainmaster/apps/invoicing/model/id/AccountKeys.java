@@ -14,6 +14,10 @@ public abstract class AccountKeys {
 	@JoinColumn(name = "account_id")
 	private Account account;
 
+	@Deprecated
+	public AccountKeys() {
+	}
+	
 	public AccountKeys(Account account) {
 		this.account = account;
 	}

@@ -10,7 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -53,29 +52,19 @@ public class Store implements Serializable {
 	@OneToOne(mappedBy = "store", fetch = FetchType.LAZY)
 	private StoreDetail storeDetail;
 
-	@ManyToOne(targetEntity = Store.class, optional = true)
+	@ManyToOne(targetEntity = Store.class, optional = true, fetch = FetchType.LAZY)
 	private Store parentStore;
 	
-	@ManyToOne(targetEntity = Account.class)
-	@JoinColumn(name = "emailAddress")
-	private Account account;
-
-	@OneToMany(mappedBy = "parentStore", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "parentStore", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Store> childStores = new ArrayList<Store>();
 
-//	@OneToMany(mappedBy = "id.store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private List<UserStore> users = new ArrayList<UserStore>();
+	@OneToMany(mappedBy = "userStoreAccountKeys.userId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<UserStore> userStoreList = new ArrayList<UserStore>();
 //
 //	@OneToMany(mappedBy = "id.store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //	private List<ProductStore> products = new ArrayList<ProductStore>();
 
 	public Store() {
-	}
-
-	public Store(Account account, UUID uuid, String storeName, StoreType storeType) {
-		keys = new StoreAccountKeys(account, uuid);
-		this.storeName = storeName;
-		this.storeType = storeType;
 	}
 
 	public Store(Account account, UUID uuid, String storeName, StoreType storeType, String contactFirstName, String contactLastName) {
@@ -117,13 +106,13 @@ public class Store implements Serializable {
 		this.childStores = childStores;
 	}
 
-//	public List<UserStore> getUsers() {
-//		return users;
-//	}
-//
-//	public void setUsers(List<UserStore> users) {
-//		this.users = users;
-//	}
+	public List<UserStore> getUserStoreList() {
+		return userStoreList;
+	}
+
+	public void setUserStoreList(List<UserStore> userStoreList) {
+		this.userStoreList = userStoreList;
+	}
 
 	public void setStoreName(String storeName) {
 		this.storeName = storeName;
@@ -169,23 +158,7 @@ public class Store implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((account == null) ? 0 : account.hashCode());
-		result = prime * result
-				+ ((childStores == null) ? 0 : childStores.hashCode());
-		result = prime
-				* result
-				+ ((contactFirstName == null) ? 0 : contactFirstName.hashCode());
-		result = prime * result
-				+ ((contactLastName == null) ? 0 : contactLastName.hashCode());
 		result = prime * result + ((keys == null) ? 0 : keys.hashCode());
-		result = prime * result
-				+ ((parentStore == null) ? 0 : parentStore.hashCode());
-		result = prime * result
-				+ ((storeDetail == null) ? 0 : storeDetail.hashCode());
-		result = prime * result
-				+ ((storeName == null) ? 0 : storeName.hashCode());
-		result = prime * result
-				+ ((storeType == null) ? 0 : storeType.hashCode());
 		return result;
 	}
 
@@ -198,47 +171,10 @@ public class Store implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Store other = (Store) obj;
-		if (account == null) {
-			if (other.account != null)
-				return false;
-		} else if (!account.equals(other.account))
-			return false;
-		if (childStores == null) {
-			if (other.childStores != null)
-				return false;
-		} else if (!childStores.equals(other.childStores))
-			return false;
-		if (contactFirstName == null) {
-			if (other.contactFirstName != null)
-				return false;
-		} else if (!contactFirstName.equals(other.contactFirstName))
-			return false;
-		if (contactLastName == null) {
-			if (other.contactLastName != null)
-				return false;
-		} else if (!contactLastName.equals(other.contactLastName))
-			return false;
 		if (keys == null) {
 			if (other.keys != null)
 				return false;
 		} else if (!keys.equals(other.keys))
-			return false;
-		if (parentStore == null) {
-			if (other.parentStore != null)
-				return false;
-		} else if (!parentStore.equals(other.parentStore))
-			return false;
-		if (storeDetail == null) {
-			if (other.storeDetail != null)
-				return false;
-		} else if (!storeDetail.equals(other.storeDetail))
-			return false;
-		if (storeName == null) {
-			if (other.storeName != null)
-				return false;
-		} else if (!storeName.equals(other.storeName))
-			return false;
-		if (storeType != other.storeType)
 			return false;
 		return true;
 	}
@@ -249,7 +185,6 @@ public class Store implements Serializable {
 				+ ", storeType=" + storeType + ", contactFirstName="
 				+ contactFirstName + ", contactLastName=" + contactLastName
 				+ ", storeDetail=" + storeDetail + ", parentStore="
-				+ parentStore + ", account=" + account + ", childStores="
-				+ childStores + "]";
+				+ parentStore + ", childStores="+ childStores + "]";
 	}
 }

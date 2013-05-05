@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
@@ -36,21 +37,21 @@ public class Product implements Serializable {
 	@Column(name = "barcode_number")
 	private String barcodeNumber;
 
-	@ManyToOne(targetEntity = PackagingUnit.class)
+	@ManyToOne(targetEntity = PackagingUnit.class, fetch = FetchType.LAZY)
 	@JoinColumns({
 		@JoinColumn(name = "packaging_id"),
 		@JoinColumn(name = "packaging_account_id")
 	})
 	private PackagingUnit packageCode;
 
-	@ManyToOne(targetEntity = Brand.class)
+	@ManyToOne(targetEntity = Brand.class, fetch = FetchType.LAZY)
 	@JoinColumns({
 		@JoinColumn(name = "brand_name"),
 		@JoinColumn(name = "brand_account_id")
 	})
 	private Brand brand;
 
-	@ManyToOne(targetEntity = Category.class)
+	@ManyToOne(targetEntity = Category.class, fetch = FetchType.LAZY)
 	@JoinColumns({
 		@JoinColumn(name = "category_name"),
 		@JoinColumn(name = "category_account_id")

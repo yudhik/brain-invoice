@@ -10,6 +10,10 @@ import com.brainmaster.apps.invoicing.model.Account;
 public class ProductStoreKeys extends AccountKeys implements Serializable {
 
 	private static final long serialVersionUID = 5178347163876248031L;
+
+	@Deprecated
+	public ProductStoreKeys() {
+	}
 	
 	public ProductStoreKeys(Account account) {
 		super(account);

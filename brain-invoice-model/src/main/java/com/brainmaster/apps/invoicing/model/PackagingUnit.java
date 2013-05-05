@@ -50,8 +50,6 @@ public class PackagingUnit implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((keys == null) ? 0 : keys.hashCode());
-		result = prime * result
-				+ ((packagingName == null) ? 0 : packagingName.hashCode());
 		return result;
 	}
 
@@ -68,11 +66,6 @@ public class PackagingUnit implements Serializable {
 			if (other.keys != null)
 				return false;
 		} else if (!keys.equals(other.keys))
-			return false;
-		if (packagingName == null) {
-			if (other.packagingName != null)
-				return false;
-		} else if (!packagingName.equals(other.packagingName))
 			return false;
 		return true;
 	}
