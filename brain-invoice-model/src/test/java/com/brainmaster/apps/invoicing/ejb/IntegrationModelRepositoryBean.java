@@ -36,55 +36,75 @@ public class IntegrationModelRepositoryBean {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Account saveAccount(Account account) {
 		em.persist(account);
+		em.flush();
 		return account;
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Category saveCategory(Category category) {
 		em.persist(category);
+		em.flush();
 		return category;
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Brand saveBrand(Brand brand) {
 		em.persist(brand);
+		em.flush();
 		return brand;
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public PackagingUnit savePackaging(PackagingUnit packaging) {
 		em.persist(packaging);
+		em.flush();
 		return packaging;
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Product saveProduct(Product product) {
 		em.persist(product);
+		em.flush();
 		return product;
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Store saveStore(Store store) {
 		em.persist(store);
+		em.flush();
 		return store;
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public User saveUser(User user) {
 		em.persist(user);
+		em.flush();
 		return user;
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public StoreDetail saveStoreDetail(StoreDetail storeDetail) {
 		em.persist(storeDetail);
+		em.flush();
 		return storeDetail;
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public UserStore saveUserStore(UserStore userStore) {
 		em.persist(userStore);
+		em.flush();
 		return userStore;
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public Store addUserToStore(Store store, List<UserStore> userStoreList) {
+		Store mystore = em.find(Store.class, store.getKeys());
+		for(UserStore userStore : userStoreList) {
+			mystore.getUserStoreList().add(userStore);
+		}
+		em.persist(mystore);
+		em.flush();
+		return mystore;
 	}
 	
 	public User getUser(String email) {
@@ -108,7 +128,15 @@ public class IntegrationModelRepositoryBean {
 	}
 	
 	public Store getStoreFromKey(StoreAccountKeys storeAccountKeys) {
-		return em.find(Store.class, storeAccountKeys);
+		return getStoreFromKey(storeAccountKeys, false);
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public Store getStoreFromKey(StoreAccountKeys storeAccountKeys, boolean fetchChild) {
+		Store store = em.find(Store.class, storeAccountKeys);
+		if(fetchChild)
+			Hibernate.initialize(store.getChildStores());
+		return store;
 	}
 	
 	public List<Account> getAllAccount() {
@@ -152,9 +180,9 @@ public class IntegrationModelRepositoryBean {
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public List<User> getUsersFromStore(Store store) {
-		Account myAccount = em.find(Account.class, store.getKeys().getAccount().getAccountUuid());
-		StoreAccountKeys storeAccountKeys = new StoreAccountKeys(myAccount, store.getKeys().getUuid());
-		Store myStore = em.find(Store.class, storeAccountKeys);
+//		Account myAccount = em.find(Account.class, store.getKeys().getAccount().getAccountUuid());
+//		StoreAccountKeys storeAccountKeys = new StoreAccountKeys(myAccount, store.getKeys().getUuid());
+		Store myStore = em.find(Store.class, store.getKeys());
 		Hibernate.initialize(myStore.getUserStoreList());
 		List<User> users = new ArrayList<User>();
 		for(UserStore userStore : myStore.getUserStoreList()) {
