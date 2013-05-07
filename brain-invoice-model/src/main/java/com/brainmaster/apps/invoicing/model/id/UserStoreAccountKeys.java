@@ -24,9 +24,9 @@ public class UserStoreAccountKeys extends StoreAccountKeys {
 	public UserStoreAccountKeys() {
 	}
 	
-	public UserStoreAccountKeys(Account account, Store store) {
+	public UserStoreAccountKeys(Account account, Store store, UUID userId) {
 		super(account, store.getKeys().getUuid());
-		this.userId = UUID.randomUUID();
+		this.userId = userId;
 	}
 
 	public UUID getUserId() {

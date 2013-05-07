@@ -1,5 +1,7 @@
 package com.brainmaster.apps.invoicing.ejb.test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -18,7 +20,6 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.brainmaster.apps.invoicing.ejb.IntegrationModelRepositoryBean;
@@ -39,6 +40,7 @@ import com.brainmaster.apps.invoicing.model.id.CategoryAccountKeys;
 import com.brainmaster.apps.invoicing.model.id.PackagingAccountKeys;
 import com.brainmaster.apps.invoicing.model.id.StoreAccountKeys;
 import com.brainmaster.apps.invoicing.model.id.UserAccountKeys;
+import com.brainmaster.apps.invoicing.model.id.UserStoreAccountKeys;
 
 public class IntegrationModelTest extends Arquillian {
 
@@ -55,8 +57,8 @@ public class IntegrationModelTest extends Arquillian {
 	@Inject
 	private IntegrationModelRepositoryBean repositoryBean;
 	
-	private UUID userId;
-	private UUID storeId;
+	private static final UUID USER_ID = UUID.randomUUID();
+	private static final UUID STORE_ID = UUID.randomUUID();
 
 	@Deployment
 	public static Archive<?> createTestArchive() {
@@ -72,6 +74,7 @@ public class IntegrationModelTest extends Arquillian {
 						"META-INF/persistence.xml")
 				// .addAsManifestResource("test-ds.xml", "test-ds.xml")
 				.addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"))
+				.addAsWebInfResource("test-ds.xml")
 				.addAsLibraries(
 						DependencyResolvers
 								.use(MavenDependencyResolver.class)
@@ -83,23 +86,17 @@ public class IntegrationModelTest extends Arquillian {
 		return war;
 	}
 	
-	@BeforeTest
-	private void initUserId() {
-		userId = UUID.randomUUID();
-		storeId = UUID.randomUUID();
-	}
-
 	@Test
 	public void testIntegrationRepositoryBeanInjection() {
 		Assert.assertNotNull(repositoryBean, "ejb is null");
-		Assert.assertNotNull(userId, "user id is null");
+		Assert.assertNotNull(USER_ID, "user id is null");
 		log.info("successsfully injecting ejb");
 	}
 
 	@Test(dependsOnMethods = "testIntegrationRepositoryBeanInjection")
 	public void testCreatingAccountAndUser() {
 		Account account = new Account(EMAIL_ID,"ucup", "sanusi");
-		UserAccountKeys keys = new UserAccountKeys(account, userId);
+		UserAccountKeys keys = new UserAccountKeys(account, USER_ID);
 		account.getUsers().add(
 				new User(keys, EMAIL_ID, ArrayUtils.toObject(
 						DigestUtils.md5Hex("simplePassword").getBytes()), "ucup", "sanusi"));
@@ -190,20 +187,27 @@ public class IntegrationModelTest extends Arquillian {
 		Assert.assertNotNull(account.getAccountId(), "account id is null");
 		CompanyInformation companyInformation = new CompanyInformation("Jl. Perjuangan Tiada Akhir", "Dwiwarna, Karang anyar", "Jakarta Pusat", "11111", "Jakarta", "Jakarta Utara", "Support@me.com", "123456", "123456", "123456");
 		BankInformation bankInformation = new BankInformation("Paijo", "1234567", "bank miun", "cabang satusatunya", "1234", "Jl. Karang Anyar A", "Jakarta Pusat", "haloo", "123456", "Jakarta Pusat", "DKI Jakarta");
-		Store store = repositoryBean.saveStore(new Store(account, storeId, A_STORE_NAME, StoreType.BRANCH, "Hello", null));
+		Store store = repositoryBean.saveStore(new Store(account, STORE_ID, A_STORE_NAME, StoreType.BRANCH, "Hello", null));
 		StoreDetail storeDetail = repositoryBean.saveStoreDetail(new StoreDetail(store, companyInformation, bankInformation));
+		Assert.assertNotNull(store);
 		Assert.assertNotNull(storeDetail, "store detail is null");
 		Assert.assertEquals(repositoryBean.getAllStoreFromAccount(account).size(), 1);
 		log.info(storeDetail.toString());
+		log.info("#store id : {}", new Object[]{STORE_ID});
 	}
 	
 	@Test(dependsOnMethods = { "testCreatingStore" })
 	public void testCreatingUserStore() {
 		User user = repositoryBean.getUser(EMAIL_ID);
 		Account account = user.getKeys().getAccount();
-		StoreAccountKeys storeAccountKeys = new StoreAccountKeys(account, storeId);
-		Store store = repositoryBean.getStoreFromKey(storeAccountKeys);
-		store.getUserStoreList().add(new UserStore(user,store));
+		log.info("store id : {}", new Object[]{STORE_ID});
+		StoreAccountKeys storeAccountKeys = new StoreAccountKeys(account, STORE_ID);
+		Store store = repositoryBean.getStoreFromKey(storeAccountKeys, true);
+		Assert.assertNotNull(store.getUserStoreList());
+//		store.getUserStoreList().add(new UserStore(new UserStoreAccountKeys(account, store, user.getKeys().getUserId())));
+		List<UserStore> userStores = new ArrayList<UserStore>();
+		userStores.add(new UserStore(new UserStoreAccountKeys(account, store, user.getKeys().getUserId())));
+		repositoryBean.addUserToStore(store, userStores);
 		Assert.assertEquals(repositoryBean.getUsersFromStore(store).size(), 1);
 	}
 

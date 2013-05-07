@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.AssociationOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -58,7 +60,11 @@ public class Store implements Serializable {
 	@OneToMany(mappedBy = "parentStore", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Store> childStores = new ArrayList<Store>();
 
-	@OneToMany(mappedBy = "userStoreAccountKeys.userId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "store",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@AssociationOverride(name = "store.keys", joinColumns = {
+			@JoinColumn(name = "uuid", referencedColumnName = "uuid"),
+			@JoinColumn(name = "account_id", referencedColumnName = "account_id") 
+	})
 	private List<UserStore> userStoreList = new ArrayList<UserStore>();
 //
 //	@OneToMany(mappedBy = "id.store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
