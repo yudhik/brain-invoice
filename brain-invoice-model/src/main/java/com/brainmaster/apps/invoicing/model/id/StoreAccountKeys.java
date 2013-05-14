@@ -5,13 +5,11 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.MappedSuperclass;
 
 import com.brainmaster.apps.invoicing.model.Account;
 import com.brainmaster.util.DatabaseColumnConstant;
 
 @Embeddable
-@MappedSuperclass
 public class StoreAccountKeys extends AccountKeys implements Serializable {
 
 	private static final long serialVersionUID = 1388325146281613599L;

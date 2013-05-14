@@ -1,47 +1,68 @@
 package com.brainmaster.apps.invoicing.model.id;
 
-import java.util.UUID;
+import java.io.Serializable;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
-
-import org.hibernate.annotations.Type;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 
 import com.brainmaster.apps.invoicing.model.Account;
 import com.brainmaster.apps.invoicing.model.Store;
-import com.brainmaster.util.DatabaseColumnConstant;
+import com.brainmaster.apps.invoicing.model.User;
 
 @Embeddable
-public class UserStoreAccountKeys extends StoreAccountKeys {
+public class UserStoreAccountKeys implements Serializable {
 
 	private static final long serialVersionUID = 5422311344417738754L;
 
-	@Type(type = "uuid")
-	@Column(name = "user_id", length = DatabaseColumnConstant.SIZE_UUID)
-	private UUID userId;
+	@ManyToOne(targetEntity = Store.class, cascade = CascadeType.ALL)
+//	@JoinColumns({
+//		@JoinColumn(name = "uuid"),
+//		@JoinColumn(name = "account_id")
+//	})
+	private Store store;
 	
-	@SuppressWarnings("deprecation")
+	@ManyToOne(targetEntity = User.class, cascade = CascadeType.ALL)
+//	@JoinColumns({
+//		@JoinColumn(name = "user_id"),
+//		@JoinColumn(name = "account_id")
+//	})
+	private User user;
+	
+//	@SuppressWarnings("deprecation")
 	public UserStoreAccountKeys() {
 	}
-	
-	public UserStoreAccountKeys(Account account, Store store, UUID userId) {
-		super(account, store.getKeys().getUuid());
-		this.userId = userId;
+
+	public UserStoreAccountKeys(Account account, Store store, User user) {
+//		super(account);
+		this.store = store;
+		this.user = user;
 	}
 
-	public UUID getUserId() {
-		return userId;
+	public Store getStore() {
+		return store;
 	}
 
-	public void setUserId(UUID userId) {
-		this.userId = userId;
+	public void setStore(Store store) {
+		this.store = store;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		result = prime * result + ((store == null) ? 0 : store.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -49,23 +70,34 @@ public class UserStoreAccountKeys extends StoreAccountKeys {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
+//		if (!super.equals(obj))
+//			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		UserStoreAccountKeys other = (UserStoreAccountKeys) obj;
-		if (userId == null) {
-			if (other.userId != null)
+		if (store == null) {
+			if (other.store != null)
 				return false;
-		} else if (!userId.equals(other.userId))
+		} else if (!store.equals(other.store))
+			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "UserStoreAccountKeys [userId=" + userId + ", StoreAccountKeys = "+ super.toString() + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("UserStoreAccountKeys [store=").append(store.getStoreId())
+				.append(", user=").append(user.getKeys().getUserId()).append(", getAccount()=")
+//				.append(getAccount().getAccountId())
+				.append("]");
+		return builder.toString();
 	}
+	
 	
 	
 }

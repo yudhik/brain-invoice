@@ -206,7 +206,7 @@ public class IntegrationModelTest extends Arquillian {
 		Assert.assertNotNull(store.getUserStoreList());
 //		store.getUserStoreList().add(new UserStore(new UserStoreAccountKeys(account, store, user.getKeys().getUserId())));
 		List<UserStore> userStores = new ArrayList<UserStore>();
-		userStores.add(new UserStore(new UserStoreAccountKeys(account, store, user.getKeys().getUserId())));
+		userStores.add(new UserStore(new UserStoreAccountKeys(account, store, user)));
 		repositoryBean.addUserToStore(store, userStores);
 		Assert.assertEquals(repositoryBean.getUsersFromStore(store).size(), 1);
 	}

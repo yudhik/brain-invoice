@@ -186,7 +186,7 @@ public class IntegrationModelRepositoryBean {
 		Hibernate.initialize(myStore.getUserStoreList());
 		List<User> users = new ArrayList<User>();
 		for(UserStore userStore : myStore.getUserStoreList()) {
-			users.add(userStore.getUser());
+			users.add(userStore.getKeys().getUser());
 		}
 		return users;
 	}
