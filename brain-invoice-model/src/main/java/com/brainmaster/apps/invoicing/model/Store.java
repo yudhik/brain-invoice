@@ -60,7 +60,7 @@ public class Store implements Serializable {
 	@OneToMany(mappedBy = "parentStore", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Store> childStores = new ArrayList<Store>();
 
-	@OneToMany(mappedBy = "store",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "keys.store",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@AssociationOverride(name = "store.keys", joinColumns = {
 			@JoinColumn(name = "uuid", referencedColumnName = "uuid"),
 			@JoinColumn(name = "account_id", referencedColumnName = "account_id") 
