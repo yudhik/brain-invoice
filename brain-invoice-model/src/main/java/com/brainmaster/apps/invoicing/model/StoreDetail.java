@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
@@ -22,105 +23,100 @@ import com.brainmaster.apps.invoicing.model.id.StoreAccountKeys;
 @Table(name = "store_detail")
 public class StoreDetail implements Serializable {
 
-	private static final long serialVersionUID = -1462474216780036654L;
-	
-	@EmbeddedId
-	@AttributeOverrides({
-        @AttributeOverride(name="account_id", column=@Column(name="account_id")),
-        @AttributeOverride(name="uuid", column=@Column(name="uuid"))
-    })
-	private StoreAccountKeys storeAccountKeys;
+    private static final long serialVersionUID = -1462474216780036654L;
 
-	@OneToOne(optional=true, fetch = FetchType.LAZY)
-	@PrimaryKeyJoinColumns({
-		@PrimaryKeyJoinColumn(name = "account_id"),
-		@PrimaryKeyJoinColumn(name = "uuid")
-	})
-	private Store store;
+    @EmbeddedId
+    @AttributeOverrides({
+	    @AttributeOverride(name = "account_id", column = @Column(name = "account_id")),
+	    @AttributeOverride(name = "uuid", column = @Column(name = "uuid")) })
+    private StoreAccountKeys storeAccountKeys;
 
-	@Embedded
-	private CompanyInformation companyInformation;
+    @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumns({ @PrimaryKeyJoinColumn(name = "account_id"),
+	    @PrimaryKeyJoinColumn(name = "uuid") })
+    private Store store;
 
-	@Embedded
-	private BankInformation bankInformation;
+    @Embedded
+    private CompanyInformation companyInformation;
 
-	public StoreDetail() {
-	}
+    @Embedded
+    private BankInformation bankInformation;
 
-	public StoreDetail(Store store,
-			CompanyInformation companyInformation,
-			BankInformation bankInformation) {
-		this.store = store;
-		this.storeAccountKeys = store.getKeys();
-		this.companyInformation = companyInformation;
-		this.bankInformation = bankInformation;
-	}
-	
-	public Store getStore() {
-		return store;
-	}
+    public StoreDetail() {
+    }
 
-	public void setStore(Store store) {
-		this.store = store;
-	}
+    public StoreDetail(Store store, CompanyInformation companyInformation,
+	    BankInformation bankInformation) {
+	this.store = store;
+	this.storeAccountKeys = store.getKeys();
+	this.companyInformation = companyInformation;
+	this.bankInformation = bankInformation;
+    }
 
-	public CompanyInformation getCompanyInformation() {
-		return companyInformation;
-	}
+    public Store getStore() {
+	return store;
+    }
 
-	public void setCompanyInformation(CompanyInformation companyInformation) {
-		this.companyInformation = companyInformation;
-	}
+    public void setStore(Store store) {
+	this.store = store;
+    }
 
-	public BankInformation getBankInformation() {
-		return bankInformation;
-	}
+    public CompanyInformation getCompanyInformation() {
+	return companyInformation;
+    }
 
-	public void setBankInformation(BankInformation bankInformation) {
-		this.bankInformation = bankInformation;
-	}
+    public void setCompanyInformation(CompanyInformation companyInformation) {
+	this.companyInformation = companyInformation;
+    }
 
-	public StoreAccountKeys getStoreAccountKeys() {
-		return storeAccountKeys;
-	}
+    public BankInformation getBankInformation() {
+	return bankInformation;
+    }
 
-	public void setStoreAccountKeys(StoreAccountKeys storeAccountKeys) {
-		this.storeAccountKeys = storeAccountKeys;
-	}
+    public void setBankInformation(BankInformation bankInformation) {
+	this.bankInformation = bankInformation;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime
-				* result
-				+ ((storeAccountKeys == null) ? 0 : storeAccountKeys.hashCode());
-		return result;
-	}
+    public StoreAccountKeys getStoreAccountKeys() {
+	return storeAccountKeys;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		StoreDetail other = (StoreDetail) obj;
-		if (storeAccountKeys == null) {
-			if (other.storeAccountKeys != null)
-				return false;
-		} else if (!storeAccountKeys.equals(other.storeAccountKeys))
-			return false;
-		return true;
-	}
+    public void setStoreAccountKeys(StoreAccountKeys storeAccountKeys) {
+	this.storeAccountKeys = storeAccountKeys;
+    }
 
-	@Override
-	public String toString() {
-		return "StoreDetail [storeAccountKeys=" + storeAccountKeys + ", store="
-				+ store + ", companyInformation=" + companyInformation
-				+ ", bankInformation=" + bankInformation + "]";
-	}
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime
+		* result
+		+ ((storeAccountKeys == null) ? 0 : storeAccountKeys.hashCode());
+	return result;
+    }
 
-	
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	StoreDetail other = (StoreDetail) obj;
+	if (storeAccountKeys == null) {
+	    if (other.storeAccountKeys != null)
+		return false;
+	} else if (!storeAccountKeys.equals(other.storeAccountKeys))
+	    return false;
+	return true;
+    }
+
+    @Override
+    public String toString() {
+	return "StoreDetail [storeAccountKeys=" + storeAccountKeys
+		+ ", companyInformation=" + companyInformation
+		+ ", bankInformation=" + bankInformation + "]";
+    }
+
 }

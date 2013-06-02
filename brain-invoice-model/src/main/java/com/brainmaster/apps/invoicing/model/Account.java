@@ -30,185 +30,193 @@ import com.brainmaster.util.types.UUIDType;
 @Table(name = "account")
 public class Account implements Serializable {
 
-	private static final long serialVersionUID = 5856204102955357752L;
+    private static final long serialVersionUID = 5856204102955357752L;
 
-	@Id
-	@Type(type = "uuid")
-	@Column(name = "account_uuid", length = DatabaseColumnConstant.SIZE_UUID)
-	private UUID accountUuid;
+    @Id
+    @Type(type = "uuid")
+    @Column(name = "account_uuid", length = DatabaseColumnConstant.SIZE_UUID)
+    private UUID accountUuid;
 
-	@NotNull
-	@Email
-	@Column(name = "registration_address", unique = true)
-	private String registrationEmailAddress;
+    @NotNull
+    @Email
+    @Column(name = "registration_address", unique = true)
+    private String registrationEmailAddress;
 
-	@NotBlank
-	@Column(name = "registration_first_name", length = DatabaseColumnConstant.SIZE_FIRSTNAME)
-	private String resitrationFirstName;
+    @NotBlank
+    @Column(name = "registration_first_name", length = DatabaseColumnConstant.SIZE_FIRSTNAME)
+    private String resitrationFirstName;
 
-	@Column(name = "registration_last_name", length = DatabaseColumnConstant.SIZE_LASTNAME)
-	private String registrationLastName;
+    @Column(name = "registration_last_name", length = DatabaseColumnConstant.SIZE_LASTNAME)
+    private String registrationLastName;
 
-	@OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Brand> brands = new ArrayList<Brand>();
-	
-	@OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Category> categories = new ArrayList<Category>();
+    @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Brand> brands = new ArrayList<Brand>();
 
-	@OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<PackagingUnit> packagingUnits = new ArrayList<PackagingUnit>();
-	
-	@OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Product> products = new ArrayList<Product>();
-	
-	@OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Store> stores = new ArrayList<Store>();
+    @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Category> categories = new ArrayList<Category>();
 
-	@OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<User> users = new ArrayList<User>();
+    @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PackagingUnit> packagingUnits = new ArrayList<PackagingUnit>();
 
-	public Account() {
-	}
+    @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Product> products = new ArrayList<Product>();
 
-	public Account(String emailAddress, String firstName, String lastName) {
-		this.accountUuid = UUID.randomUUID();
-		this.registrationEmailAddress = emailAddress;
-		this.resitrationFirstName = firstName;
-		this.registrationLastName = lastName;
-	}
+    @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Store> stores = new ArrayList<Store>();
 
-	@Transient
-	public String getAccountId() {
-		return UUIDHelper.uuidToString(accountUuid);
-	}
+//    @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private List<User> users = new ArrayList<User>();
+    
+    
+    public Account() {
+    }
+    
+    public Account(UUID accountUuid, String emailAddress, String firstName, String lastName) {
+	this.accountUuid = accountUuid;
+	this.registrationEmailAddress = emailAddress;
+	this.resitrationFirstName = firstName;
+	this.registrationLastName = lastName;
+    }
 
-	public String getEmailAddress() {
-		return registrationEmailAddress;
-	}
+    public Account(String emailAddress, String firstName, String lastName) {
+	this.accountUuid = UUID.randomUUID();
+	this.registrationEmailAddress = emailAddress;
+	this.resitrationFirstName = firstName;
+	this.registrationLastName = lastName;
+    }
 
-	public void setEmailAddress(String emailAddress) {
-		this.registrationEmailAddress = emailAddress;
-	}
+    @Transient
+    public String getAccountId() {
+	return UUIDHelper.uuidToString(accountUuid);
+    }
 
-	public UUID getAccountUuid() {
-		return accountUuid;
-	}
+    public String getEmailAddress() {
+	return registrationEmailAddress;
+    }
 
-	public void setAccountUuid(UUID accountUuid) {
-		this.accountUuid = accountUuid;
-	}
+    public void setEmailAddress(String emailAddress) {
+	this.registrationEmailAddress = emailAddress;
+    }
 
-	public String getRegistrationEmailAddress() {
-		return registrationEmailAddress;
-	}
+    public UUID getAccountUuid() {
+	return accountUuid;
+    }
 
-	public void setRegistrationEmailAddress(String registrationEmailAddress) {
-		this.registrationEmailAddress = registrationEmailAddress;
-	}
+    public void setAccountUuid(UUID accountUuid) {
+	this.accountUuid = accountUuid;
+    }
 
-	public String getResitrationFirstName() {
-		return resitrationFirstName;
-	}
+    public String getRegistrationEmailAddress() {
+	return registrationEmailAddress;
+    }
 
-	public void setResitrationFirstName(String resitrationFirstName) {
-		this.resitrationFirstName = resitrationFirstName;
-	}
+    public void setRegistrationEmailAddress(String registrationEmailAddress) {
+	this.registrationEmailAddress = registrationEmailAddress;
+    }
 
-	public String getRegistrationLastName() {
-		return registrationLastName;
-	}
+    public String getResitrationFirstName() {
+	return resitrationFirstName;
+    }
 
-	public void setRegistrationLastName(String registrationLastName) {
-		this.registrationLastName = registrationLastName;
-	}
+    public void setResitrationFirstName(String resitrationFirstName) {
+	this.resitrationFirstName = resitrationFirstName;
+    }
 
-	public List<Brand> getBrands() {
-		return brands;
-	}
+    public String getRegistrationLastName() {
+	return registrationLastName;
+    }
 
-	public void setBrands(List<Brand> brands) {
-		this.brands = brands;
-	}
+    public void setRegistrationLastName(String registrationLastName) {
+	this.registrationLastName = registrationLastName;
+    }
 
-	public List<Category> getCategories() {
-		return categories;
-	}
+    public List<Brand> getBrands() {
+	return brands;
+    }
 
-	public void setCategories(List<Category> categories) {
-		this.categories = categories;
-	}
+    public void setBrands(List<Brand> brands) {
+	this.brands = brands;
+    }
 
-	public List<PackagingUnit> getPackagingUnits() {
-		return packagingUnits;
-	}
+    public List<Category> getCategories() {
+	return categories;
+    }
 
-	public void setPackagingUnits(List<PackagingUnit> packagingUnits) {
-		this.packagingUnits = packagingUnits;
-	}
+    public void setCategories(List<Category> categories) {
+	this.categories = categories;
+    }
 
-	public List<Product> getProducts() {
-		return products;
-	}
+    public List<PackagingUnit> getPackagingUnits() {
+	return packagingUnits;
+    }
 
-	public void setProducts(List<Product> products) {
-		this.products = products;
-	}
+    public void setPackagingUnits(List<PackagingUnit> packagingUnits) {
+	this.packagingUnits = packagingUnits;
+    }
 
-	public List<Store> getStores() {
-		return stores;
-	}
+    public List<Product> getProducts() {
+	return products;
+    }
 
-	public void setStores(List<Store> stores) {
-		this.stores = stores;
-	}
+    public void setProducts(List<Product> products) {
+	this.products = products;
+    }
 
-	public List<User> getUsers() {
-		return users;
-	}
+    public List<Store> getStores() {
+	return stores;
+    }
 
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
+    public void setStores(List<Store> stores) {
+	this.stores = stores;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((accountUuid == null) ? 0 : accountUuid.hashCode());
-		result = prime
-				* result
-				+ ((registrationEmailAddress == null) ? 0
-						: registrationEmailAddress.hashCode());
-		return result;
-	}
+//    public List<User> getUsers() {
+//	return users;
+//    }
+//
+//    public void setUsers(List<User> users) {
+//	this.users = users;
+//    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Account other = (Account) obj;
-		if (accountUuid == null) {
-			if (other.accountUuid != null)
-				return false;
-		} else if (!accountUuid.equals(other.accountUuid))
-			return false;
-		if (registrationEmailAddress == null) {
-			if (other.registrationEmailAddress != null)
-				return false;
-		} else if (!registrationEmailAddress
-				.equals(other.registrationEmailAddress))
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result
+		+ ((accountUuid == null) ? 0 : accountUuid.hashCode());
+	result = prime
+		* result
+		+ ((registrationEmailAddress == null) ? 0
+			: registrationEmailAddress.hashCode());
+	return result;
+    }
 
-	@Override
-	public String toString() {
-		return "Account [emailAddress=" + registrationEmailAddress
-				+ ", accountId=" + getAccountId() + "]";
-	}
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Account other = (Account) obj;
+	if (accountUuid == null) {
+	    if (other.accountUuid != null)
+		return false;
+	} else if (!accountUuid.equals(other.accountUuid))
+	    return false;
+	if (registrationEmailAddress == null) {
+	    if (other.registrationEmailAddress != null)
+		return false;
+	} else if (!registrationEmailAddress
+		.equals(other.registrationEmailAddress))
+	    return false;
+	return true;
+    }
+
+    @Override
+    public String toString() {
+	return "Account [emailAddress=" + registrationEmailAddress
+		+ ", accountId=" + getAccountId() + "]";
+    }
 }

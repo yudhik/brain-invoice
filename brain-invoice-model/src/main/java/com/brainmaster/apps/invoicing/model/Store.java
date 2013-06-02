@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.AssociationOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -29,168 +27,175 @@ import com.brainmaster.util.helper.uuid.UUIDHelper;
 @Table(name = "store")
 public class Store implements Serializable {
 
-	private static final long serialVersionUID = 5947838295063055068L;
+    private static final long serialVersionUID = 5947838295063055068L;
 
-	@EmbeddedId
-	private StoreAccountKeys keys;
+    @EmbeddedId
+    private StoreAccountKeys keys;
 
-	@NotNull
-	@NotBlank
-	@Column(name = "store_name")
-	private String storeName;
+    @NotNull
+    @NotBlank
+    @Column(name = "store_name")
+    private String storeName;
 
-	@NotNull
-	@Column(name = "store_type")
-	private StoreType storeType;
+    @NotNull
+    @Column(name = "store_type")
+    private StoreType storeType;
 
-	@NotNull
-	@NotBlank
-	@Column(name = "contact_first_name")
-	private String contactFirstName;
-	
-	@Column(name = "contact_last_name")
-	private String contactLastName;
-	
-	@OneToOne(mappedBy = "store", fetch = FetchType.LAZY)
-	private StoreDetail storeDetail;
+    @NotNull
+    @NotBlank
+    @Column(name = "contact_first_name")
+    private String contactFirstName;
 
-	@ManyToOne(targetEntity = Store.class, optional = true, fetch = FetchType.LAZY)
-	private Store parentStore;
-	
-	@OneToMany(mappedBy = "parentStore", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Store> childStores = new ArrayList<Store>();
+    @Column(name = "contact_last_name")
+    private String contactLastName;
 
-	@OneToMany(mappedBy = "keys.store",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@AssociationOverride(name = "store.keys", joinColumns = {
-			@JoinColumn(name = "uuid", referencedColumnName = "uuid"),
-			@JoinColumn(name = "account_id", referencedColumnName = "account_id") 
-	})
-	private List<UserStore> userStoreList = new ArrayList<UserStore>();
-//
-//	@OneToMany(mappedBy = "id.store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private List<ProductStore> products = new ArrayList<ProductStore>();
+    @OneToOne(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private StoreDetail storeDetail;
 
-	public Store() {
-	}
+    @ManyToOne(targetEntity = Store.class, optional = true, fetch = FetchType.LAZY)
+    private Store parentStore;
 
-	public Store(Account account, UUID uuid, String storeName, StoreType storeType, String contactFirstName, String contactLastName) {
-		keys = new StoreAccountKeys(account, uuid);
-		this.storeName = storeName;
-		this.storeType = storeType;
-		this.contactFirstName = contactFirstName;
-		this.contactLastName = contactLastName;
-	}
+    @OneToMany(mappedBy = "parentStore", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Store> childStores = new ArrayList<Store>();
 
-	@Transient
-	public String getStoreId() {
-		if(keys != null)
-			return UUIDHelper.uuidToString(keys.getUuid());
-		return null;
-	}
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<User> users = new ArrayList<User>();
+    
+    //
+    // @OneToMany(mappedBy = "id.store", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL)
+    // private List<ProductStore> products = new ArrayList<ProductStore>();
 
-	public Store getParentStore() {
-		return parentStore;
-	}
+    public Store() {
+    }
 
-	public StoreAccountKeys getKeys() {
-		return keys;
-	}
+    public Store(Account account, UUID uuid, String storeName,
+	    StoreType storeType, String contactFirstName, String contactLastName) {
+	keys = new StoreAccountKeys(account, uuid);
+	this.storeName = storeName;
+	this.storeType = storeType;
+	this.contactFirstName = contactFirstName;
+	this.contactLastName = contactLastName;
+    }
 
-	public void setKeys(StoreAccountKeys keys) {
-		this.keys = keys;
-	}
+    @Transient
+    public String getStoreId() {
+	if (keys != null)
+	    return UUIDHelper.uuidToString(keys.getUuid());
+	return null;
+    }
 
-	public void setParentStore(Store parentStore) {
-		this.parentStore = parentStore;
-	}
+    public Store getParentStore() {
+	return parentStore;
+    }
 
-	public List<Store> getChildStores() {
-		return childStores;
-	}
+    public StoreAccountKeys getKeys() {
+	return keys;
+    }
 
-	public void setChildStores(List<Store> childStores) {
-		this.childStores = childStores;
-	}
+    public void setKeys(StoreAccountKeys keys) {
+	this.keys = keys;
+    }
 
-	public List<UserStore> getUserStoreList() {
-		return userStoreList;
-	}
+    public void setParentStore(Store parentStore) {
+	this.parentStore = parentStore;
+    }
 
-	public void setUserStoreList(List<UserStore> userStoreList) {
-		this.userStoreList = userStoreList;
-	}
+    public List<Store> getChildStores() {
+	return childStores;
+    }
 
-	public void setStoreName(String storeName) {
-		this.storeName = storeName;
-	}
+    public void setChildStores(List<Store> childStores) {
+	this.childStores = childStores;
+    }
 
-	public String getStoreName() {
-		return storeName;
-	}
+    public List<User> getUsers() {
+        return users;
+    }
 
-//	public void setProducts(List<ProductStore> products) {
-//		this.products = products;
-//	}
-//
-//	public List<ProductStore> getProducts() {
-//		return products;
-//	}
-	
-	public StoreType getStoreType() {
-		return storeType;
-	}
-	
-	public void setStoreType(StoreType storeType) {
-		this.storeType = storeType;
-	}
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 
-	public String getContactFirstName() {
-		return contactFirstName;
-	}
+    public void setStoreName(String storeName) {
+	this.storeName = storeName;
+    }
 
-	public void setContactFirstName(String contactFirstName) {
-		this.contactFirstName = contactFirstName;
-	}
+    public String getStoreName() {
+	return storeName;
+    }
 
-	public String getContactLastName() {
-		return contactLastName;
-	}
+    // public void setProducts(List<ProductStore> products) {
+    // this.products = products;
+    // }
+    //
+    // public List<ProductStore> getProducts() {
+    // return products;
+    // }
 
-	public void setContactLastName(String contactLastName) {
-		this.contactLastName = contactLastName;
-	}
+    public StoreType getStoreType() {
+	return storeType;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((keys == null) ? 0 : keys.hashCode());
-		return result;
-	}
+    public void setStoreType(StoreType storeType) {
+	this.storeType = storeType;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Store other = (Store) obj;
-		if (keys == null) {
-			if (other.keys != null)
-				return false;
-		} else if (!keys.equals(other.keys))
-			return false;
-		return true;
-	}
+    public String getContactFirstName() {
+	return contactFirstName;
+    }
 
-	@Override
-	public String toString() {
-		return "Store [keys=" + keys + ", storeName=" + storeName
-				+ ", storeType=" + storeType + ", contactFirstName="
-				+ contactFirstName + ", contactLastName=" + contactLastName
-				+ ", storeDetail=" + storeDetail + ", parentStore="
-				+ parentStore + ", childStores="+ childStores + "]";
-	}
+    public void setContactFirstName(String contactFirstName) {
+	this.contactFirstName = contactFirstName;
+    }
+
+    public String getContactLastName() {
+	return contactLastName;
+    }
+
+    public void setContactLastName(String contactLastName) {
+	this.contactLastName = contactLastName;
+    }
+
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((keys == null) ? 0 : keys.hashCode());
+	return result;
+    }
+
+    public StoreDetail getStoreDetail() {
+	return storeDetail;
+    }
+
+    public void setStoreDetail(StoreDetail storeDetail) {
+	this.storeDetail = storeDetail;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Store other = (Store) obj;
+	if (keys == null) {
+	    if (other.keys != null)
+		return false;
+	} else if (!keys.equals(other.keys))
+	    return false;
+	return true;
+    }
+
+    @Override
+    public String toString() {
+	return "Store [keys=" + keys + ", storeName=" + storeName
+		+ ", storeType=" + storeType + ", contactFirstName="
+		+ contactFirstName + ", contactLastName=" + contactLastName
+		+ ", storeDetail=" + getStoreDetail() + ", parentStore="
+		+ parentStore + ", childStores=" + childStores + "]";
+    }
 }

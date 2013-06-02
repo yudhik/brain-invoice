@@ -19,66 +19,65 @@ import com.brainmaster.apps.invoicing.model.id.BrandAccountKeys;
 @Table(name = "brand")
 public class Brand implements Serializable {
 
-	private static final long serialVersionUID = -1603771716730111235L;
+    private static final long serialVersionUID = -1603771716730111235L;
 
-	@EmbeddedId
-	private BrandAccountKeys keys;
+    @EmbeddedId
+    private BrandAccountKeys keys;
 
-	@OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Product> products = new ArrayList<Product>();
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Product> products = new ArrayList<Product>();
 
-	public Brand() {
-	}
+    public Brand() {
+    }
 
-	public Brand(Account account, String brandName) {
-		keys = new BrandAccountKeys(account, brandName);
-	}
-	
-	public BrandAccountKeys getKeys() {
-		return keys;
-	}
+    public Brand(Account account, String brandName) {
+	keys = new BrandAccountKeys(account, brandName);
+    }
 
-	public void setKeys(BrandAccountKeys keys) {
-		this.keys = keys;
-	}
+    public BrandAccountKeys getKeys() {
+	return keys;
+    }
 
-	public void setProducts(List<Product> products) {
-		this.products = products;
-	}
+    public void setKeys(BrandAccountKeys keys) {
+	this.keys = keys;
+    }
 
-	public List<Product> getProducts() {
-		return products;
-	}
+    public void setProducts(List<Product> products) {
+	this.products = products;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((keys == null) ? 0 : keys.hashCode());
-		return result;
-	}
+    public List<Product> getProducts() {
+	return products;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Brand other = (Brand) obj;
-		if (keys == null) {
-			if (other.keys != null)
-				return false;
-		} else if (!keys.equals(other.keys))
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((keys == null) ? 0 : keys.hashCode());
+	return result;
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append(keys.toString()).toString();
-	}
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Brand other = (Brand) obj;
+	if (keys == null) {
+	    if (other.keys != null)
+		return false;
+	} else if (!keys.equals(other.keys))
+	    return false;
+	return true;
+    }
 
-	
+    @Override
+    public String toString() {
+	return new ToStringBuilder(this).append(keys.toString()).toString();
+    }
+
 }
