@@ -1,10 +1,15 @@
 package com.brainmaster.apps.invoicing.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -19,6 +24,9 @@ public class Role implements Serializable {
 
     @Column(length = 75, nullable = false)
     private String description;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<UserRole> userRoles = new ArrayList<UserRole>();
 
     public Role() {
     }
@@ -42,6 +50,15 @@ public class Role implements Serializable {
 
     public void setDescription(String description) {
 	this.description = description;
+    }
+
+
+    public List<UserRole> getUserRoles() {
+	return userRoles;
+    }
+
+    public void setUserRoles(List<UserRole> userRoles) {
+	this.userRoles = userRoles;
     }
 
     @Override

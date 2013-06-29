@@ -1,9 +1,12 @@
 package com.brainmaster.apps.invoicing.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +16,7 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -57,6 +61,9 @@ public class User implements Serializable {
     @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
     @JoinColumns({ @JoinColumn(name = "uuid"), @JoinColumn(name = "account_id") })
     private Store store;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<UserRole> userRoles = new ArrayList<UserRole>();
 
     public User() {
     }
@@ -125,6 +132,14 @@ public class User implements Serializable {
 
     public void setStore(Store store) {
 	this.store = store;
+    }
+
+    public List<UserRole> getUserRoles() {
+	return userRoles;
+    }
+
+    public void setUserRoles(List<UserRole> userRoles) {
+	this.userRoles = userRoles;
     }
 
     @Override

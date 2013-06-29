@@ -60,7 +60,7 @@ public class Store implements Serializable {
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<User>();
-    
+
     //
     // @OneToMany(mappedBy = "id.store", fetch = FetchType.LAZY, cascade =
     // CascadeType.ALL)
@@ -110,11 +110,11 @@ public class Store implements Serializable {
     }
 
     public List<User> getUsers() {
-        return users;
+	return users;
     }
 
     public void setUsers(List<User> users) {
-        this.users = users;
+	this.users = users;
     }
 
     public void setStoreName(String storeName) {

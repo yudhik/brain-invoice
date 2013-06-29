@@ -1,5 +1,7 @@
 package com.brainmaster.apps.invoicing.ejb.test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -49,6 +51,8 @@ public class IntegrationModelTest extends Arquillian {
     private static final String PACKAGING_CODE = "KG";
 
     private static final String A_STORE_NAME = "My Store";
+    private static final String ANONYMOUS_ROLE = "ANONYMOUS";
+    private static final String USER_ROLE = "USER";
 
     @Inject
     private IntegrationModelRepositoryBean repositoryBean;
@@ -106,8 +110,10 @@ public class IntegrationModelTest extends Arquillian {
 	Brand brand = repositoryBean.save(new Brand(account, BRAND_NAME));
 	Assert.assertNotNull(brand.getKeys().getBrandName(),
 		"brand name is null");
-	Assert.assertEquals(repositoryBean.getAllBrandFromAccount(repositoryBean.getAccountFromKey(ACCOUNT_UUID))
-		.size(), 1);
+	Assert.assertEquals(
+		repositoryBean.getAllBrandFromAccount(
+			repositoryBean.getAccountFromKey(ACCOUNT_UUID)).size(),
+		1);
 	log.info(brand.toString());
     }
 
@@ -119,8 +125,10 @@ public class IntegrationModelTest extends Arquillian {
 		CATEGORY_NAME));
 	Assert.assertNotNull(category.getKeys().getCategoryName(),
 		"category name is null");
-	Assert.assertEquals(repositoryBean.getAllCategoryFromAccount(repositoryBean.getAccountFromKey(ACCOUNT_UUID))
-		.size(), 1);
+	Assert.assertEquals(
+		repositoryBean.getAllCategoryFromAccount(
+			repositoryBean.getAccountFromKey(ACCOUNT_UUID)).size(),
+		1);
 	log.info(category.toString());
     }
 
@@ -135,8 +143,10 @@ public class IntegrationModelTest extends Arquillian {
 		"parent category name is null");
 	Assert.assertNotNull(categoryChild.getKeys().getCategoryName(),
 		"parent category name is null");
-	Assert.assertEquals(repositoryBean.getAllCategoryFromAccount(repositoryBean.getAccountFromKey(ACCOUNT_UUID))
-		.size(), 3);
+	Assert.assertEquals(
+		repositoryBean.getAllCategoryFromAccount(
+			repositoryBean.getAccountFromKey(ACCOUNT_UUID)).size(),
+		3);
 	log.info(category.toString());
 	log.info(categoryChild.toString());
 
@@ -150,8 +160,10 @@ public class IntegrationModelTest extends Arquillian {
 		new PackagingAccountKeys(account, PACKAGING_CODE), "Kilogram"));
 	Assert.assertNotNull(packagingUnit.getKeys().getPackagingId(),
 		"packaging name is null");
-	Assert.assertEquals(repositoryBean.getAllPackagingFromAccount(repositoryBean.getAccountFromKey(ACCOUNT_UUID))
-		.size(), 1);
+	Assert.assertEquals(
+		repositoryBean.getAllPackagingFromAccount(
+			repositoryBean.getAccountFromKey(ACCOUNT_UUID)).size(),
+		1);
 	log.info(packagingUnit.toString());
     }
 
@@ -171,8 +183,10 @@ public class IntegrationModelTest extends Arquillian {
 		"Barang Terlarang", "1001", brand, category, packaging));
 	Assert.assertNotNull(product.getKeys().getProductCode(),
 		"product code is null");
-	Assert.assertEquals(repositoryBean.getAllProductFromAccount(repositoryBean.getAccountFromKey(ACCOUNT_UUID))
-		.size(), 1);
+	Assert.assertEquals(
+		repositoryBean.getAllProductFromAccount(
+			repositoryBean.getAccountFromKey(ACCOUNT_UUID)).size(),
+		1);
 	log.info(product.toString());
     }
 
@@ -194,18 +208,23 @@ public class IntegrationModelTest extends Arquillian {
 		bankInformation);
 	store.setStoreDetail(storeDetail);
 	repositoryBean.save(store);
-	Assert.assertEquals(repositoryBean.getAllStoreFromAccount(repositoryBean.getAccountFromKey(ACCOUNT_UUID))
-		.size(), 1);
+	Assert.assertEquals(
+		repositoryBean.getAllStoreFromAccount(
+			repositoryBean.getAccountFromKey(ACCOUNT_UUID)).size(),
+		1);
 	log.info(store.toString());
 	log.info("#store id : {}", new Object[] { STORE_ID });
     }
 
     @Test(dependsOnMethods = { "testCreatingStore" })
     public void testCreatingRole() {
-	final String ANONYMOUS = "ANONYMOUS";
-	Role role = repositoryBean.save(new Role(ANONYMOUS, "unknown user"));
-	Assert.assertNotNull(repositoryBean.getRoleFromKey(role.getRoleId()),
-		"role is not save");
+	Role anonymousRole = repositoryBean.save(new Role(ANONYMOUS_ROLE, "unknown user"));
+	Assert.assertNotNull(repositoryBean.getRoleFromKey(anonymousRole.getRoleId()),
+		"anonymous role is not save");
+	Role userRole = repositoryBean.save(new Role(USER_ROLE, "defined user"));
+	Assert.assertNotNull(repositoryBean.getRoleFromKey(userRole.getRoleId()),
+		"user role is not save");
+	
     }
 
     @Test(dependsOnMethods = { "testCreatingRole" })
@@ -215,11 +234,24 @@ public class IntegrationModelTest extends Arquillian {
 	StoreAccountKeys storeAccountKeys = new StoreAccountKeys(account,
 		STORE_ID);
 	Store store = repositoryBean.getReference(storeAccountKeys);
-	User user = new User(USER_ID, "ucup.sanusi", EMAIL_ID, ArrayUtils
-			.toObject(DigestUtils.md5Hex("simplePassword")
-				.getBytes()), "ucup", "sanusi");
+	User user = new User(USER_ID, "ucup.sanusi", EMAIL_ID,
+		ArrayUtils.toObject(DigestUtils.md5Hex("simplePassword")
+			.getBytes()), "ucup", "sanusi");
 	user.setStore(store);
 	repositoryBean.save(user);
-	Assert.assertEquals(repositoryBean.getStoreFromKey(storeAccountKeys, false, true).getUsers().size(), 1);
+	Assert.assertEquals(
+		repositoryBean.getStoreFromKey(storeAccountKeys, false, true)
+			.getUsers().size(), 1);
+    }
+
+    @Test(dependsOnMethods = { "testCreatingRole", "testCreatingUserFromStore" })
+    public void testCreatingUserRole() {
+	User user = repositoryBean.getUser(EMAIL_ID);
+	Role anonymousRole = repositoryBean.getRoleFromKey(ANONYMOUS_ROLE);
+	Role userRole = repositoryBean.getRoleFromKey(USER_ROLE);
+	List<Role> roles = new ArrayList<Role>();
+	roles.add(userRole);
+	roles.add(anonymousRole);
+	user = repositoryBean.createUserWithRoles(user, roles);
     }
 }
