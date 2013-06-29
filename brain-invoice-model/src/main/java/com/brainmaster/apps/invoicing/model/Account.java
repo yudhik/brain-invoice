@@ -64,14 +64,15 @@ public class Account implements Serializable {
     @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Store> stores = new ArrayList<Store>();
 
-//    @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private List<User> users = new ArrayList<User>();
-    
-    
+    // @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL)
+    // private List<User> users = new ArrayList<User>();
+
     public Account() {
     }
-    
-    public Account(UUID accountUuid, String emailAddress, String firstName, String lastName) {
+
+    public Account(UUID accountUuid, String emailAddress, String firstName,
+	    String lastName) {
 	this.accountUuid = accountUuid;
 	this.registrationEmailAddress = emailAddress;
 	this.resitrationFirstName = firstName;
@@ -170,13 +171,13 @@ public class Account implements Serializable {
 	this.stores = stores;
     }
 
-//    public List<User> getUsers() {
-//	return users;
-//    }
-//
-//    public void setUsers(List<User> users) {
-//	this.users = users;
-//    }
+    // public List<User> getUsers() {
+    // return users;
+    // }
+    //
+    // public void setUsers(List<User> users) {
+    // this.users = users;
+    // }
 
     @Override
     public int hashCode() {

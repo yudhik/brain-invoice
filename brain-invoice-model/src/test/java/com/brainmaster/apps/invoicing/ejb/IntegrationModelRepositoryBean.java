@@ -20,11 +20,13 @@ import com.brainmaster.apps.invoicing.model.Role;
 import com.brainmaster.apps.invoicing.model.Store;
 import com.brainmaster.apps.invoicing.model.StoreDetail;
 import com.brainmaster.apps.invoicing.model.User;
+import com.brainmaster.apps.invoicing.model.UserRole;
 import com.brainmaster.apps.invoicing.model.id.BrandAccountKeys;
 import com.brainmaster.apps.invoicing.model.id.CategoryAccountKeys;
 import com.brainmaster.apps.invoicing.model.id.PackagingAccountKeys;
 import com.brainmaster.apps.invoicing.model.id.ProductAccountKeys;
 import com.brainmaster.apps.invoicing.model.id.StoreAccountKeys;
+import com.brainmaster.apps.invoicing.model.id.UserRoleKeys;
 
 @Stateless
 public class IntegrationModelRepositoryBean {
@@ -87,23 +89,33 @@ public class IntegrationModelRepositoryBean {
 	em.flush();
 	return storeDetail;
     }
-    
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Role save(Role role) {
 	em.persist(role);
 	em.flush();
 	return role;
     }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public User createUserWithRoles(User user, List<Role> roles) {
+	for(Role role : roles) {
+	    user = getUser(user.getEmailAddress());
+	    user.getUserRoles().add(new UserRole(new UserRoleKeys(user, role)));
+	}
+	save(user);
+	return user;
+    }
 
     public User getUser(String email) {
 	return em.createNamedQuery("user-with-email", User.class)
 		.setParameter("email", email).getSingleResult();
     }
-    
+
     public Account getAccountFromKey(UUID accountUuid) {
 	return em.find(Account.class, accountUuid);
     }
-    
+
     public Account getReference(UUID accountUuid) {
 	return em.getReference(Account.class, accountUuid);
     }
@@ -111,7 +123,7 @@ public class IntegrationModelRepositoryBean {
     public Brand getBrandFromKey(BrandAccountKeys brandAccountKeys) {
 	return em.find(Brand.class, brandAccountKeys);
     }
-    
+
     public Brand getReference(BrandAccountKeys brandAccountKeys) {
 	return em.getReference(Brand.class, brandAccountKeys);
     }
@@ -119,7 +131,7 @@ public class IntegrationModelRepositoryBean {
     public Category getCategoryFromKey(CategoryAccountKeys categoryAccountKeys) {
 	return em.find(Category.class, categoryAccountKeys);
     }
-    
+
     public Category getReference(CategoryAccountKeys categoryAccountKeys) {
 	return em.getReference(Category.class, categoryAccountKeys);
     }
@@ -128,7 +140,7 @@ public class IntegrationModelRepositoryBean {
 	    PackagingAccountKeys packagingAccountKeys) {
 	return em.find(PackagingUnit.class, packagingAccountKeys);
     }
-    
+
     public PackagingUnit getReference(PackagingAccountKeys packagingAccountKeys) {
 	return em.getReference(PackagingUnit.class, packagingAccountKeys);
     }
@@ -136,7 +148,7 @@ public class IntegrationModelRepositoryBean {
     public Product getProductFromKey(ProductAccountKeys productAccountKeys) {
 	return em.find(Product.class, productAccountKeys);
     }
-    
+
     public Product getReference(ProductAccountKeys productAccountKeys) {
 	return em.getReference(Product.class, productAccountKeys);
     }
@@ -144,11 +156,11 @@ public class IntegrationModelRepositoryBean {
     public Store getStoreFromKey(StoreAccountKeys storeAccountKeys) {
 	return getStoreFromKey(storeAccountKeys, false);
     }
-    
+
     public Store getReference(StoreAccountKeys storeAccountKeys) {
 	return em.getReference(Store.class, storeAccountKeys);
     }
-    
+
     public Role getRoleFromKey(String roleId) {
 	return em.find(Role.class, roleId);
     }
@@ -158,14 +170,14 @@ public class IntegrationModelRepositoryBean {
 	    boolean fetchChild) {
 	return getStoreFromKey(storeAccountKeys, true, false);
     }
-    
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Store getStoreFromKey(StoreAccountKeys storeAccountKeys,
 	    boolean fetchChild, boolean fetchUser) {
 	Store store = em.find(Store.class, storeAccountKeys);
 	if (fetchChild)
 	    Hibernate.initialize(store.getChildStores());
-	if(fetchUser)
+	if (fetchUser)
 	    Hibernate.initialize(store.getUsers());
 	return store;
     }
