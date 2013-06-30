@@ -61,141 +61,146 @@ public class Store implements Serializable {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<User>();
 
-    //
-    // @OneToMany(mappedBy = "id.store", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL)
-    // private List<ProductStore> products = new ArrayList<ProductStore>();
+    @OneToMany(mappedBy = "keys.store", fetch = FetchType.LAZY, cascade =
+            CascadeType.ALL)
+    private List<ProductStore> products = new ArrayList<ProductStore>();
 
     public Store() {
     }
 
     public Store(Account account, UUID uuid, String storeName,
-	    StoreType storeType, String contactFirstName, String contactLastName) {
-	keys = new StoreAccountKeys(account, uuid);
-	this.storeName = storeName;
-	this.storeType = storeType;
-	this.contactFirstName = contactFirstName;
-	this.contactLastName = contactLastName;
+            StoreType storeType, String contactFirstName, String contactLastName) {
+        keys = new StoreAccountKeys(account, uuid);
+        this.storeName = storeName;
+        this.storeType = storeType;
+        this.contactFirstName = contactFirstName;
+        this.contactLastName = contactLastName;
     }
 
     @Transient
     public String getStoreId() {
-	if (keys != null)
-	    return UUIDHelper.uuidToString(keys.getUuid());
-	return null;
+        if (keys != null) {
+            return UUIDHelper.uuidToString(keys.getUuid());
+        }
+        return null;
     }
 
     public Store getParentStore() {
-	return parentStore;
+        return parentStore;
     }
 
     public StoreAccountKeys getKeys() {
-	return keys;
+        return keys;
     }
 
     public void setKeys(StoreAccountKeys keys) {
-	this.keys = keys;
+        this.keys = keys;
     }
 
     public void setParentStore(Store parentStore) {
-	this.parentStore = parentStore;
+        this.parentStore = parentStore;
     }
 
     public List<Store> getChildStores() {
-	return childStores;
+        return childStores;
     }
 
     public void setChildStores(List<Store> childStores) {
-	this.childStores = childStores;
+        this.childStores = childStores;
     }
 
     public List<User> getUsers() {
-	return users;
+        return users;
     }
 
     public void setUsers(List<User> users) {
-	this.users = users;
+        this.users = users;
     }
 
     public void setStoreName(String storeName) {
-	this.storeName = storeName;
+        this.storeName = storeName;
     }
 
     public String getStoreName() {
-	return storeName;
+        return storeName;
     }
 
-    // public void setProducts(List<ProductStore> products) {
-    // this.products = products;
-    // }
-    //
-    // public List<ProductStore> getProducts() {
-    // return products;
-    // }
+    public void setProducts(List<ProductStore> products) {
+        this.products = products;
+    }
+
+    public List<ProductStore> getProducts() {
+        return products;
+    }
 
     public StoreType getStoreType() {
-	return storeType;
+        return storeType;
     }
 
     public void setStoreType(StoreType storeType) {
-	this.storeType = storeType;
+        this.storeType = storeType;
     }
 
     public String getContactFirstName() {
-	return contactFirstName;
+        return contactFirstName;
     }
 
     public void setContactFirstName(String contactFirstName) {
-	this.contactFirstName = contactFirstName;
+        this.contactFirstName = contactFirstName;
     }
 
     public String getContactLastName() {
-	return contactLastName;
+        return contactLastName;
     }
 
     public void setContactLastName(String contactLastName) {
-	this.contactLastName = contactLastName;
+        this.contactLastName = contactLastName;
     }
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((keys == null) ? 0 : keys.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((keys == null) ? 0 : keys.hashCode());
+        return result;
     }
 
     public StoreDetail getStoreDetail() {
-	return storeDetail;
+        return storeDetail;
     }
 
     public void setStoreDetail(StoreDetail storeDetail) {
-	this.storeDetail = storeDetail;
+        this.storeDetail = storeDetail;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	Store other = (Store) obj;
-	if (keys == null) {
-	    if (other.keys != null)
-		return false;
-	} else if (!keys.equals(other.keys))
-	    return false;
-	return true;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Store other = (Store) obj;
+        if (keys == null) {
+            if (other.keys != null) {
+                return false;
+            }
+        } else if (!keys.equals(other.keys)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public String toString() {
-	return "Store [keys=" + keys + ", storeName=" + storeName
-		+ ", storeType=" + storeType + ", contactFirstName="
-		+ contactFirstName + ", contactLastName=" + contactLastName
-		+ ", storeDetail=" + getStoreDetail() + ", parentStore="
-		+ parentStore + ", childStores=" + childStores + "]";
+        return "Store [keys=" + keys + ", storeName=" + storeName
+                + ", storeType=" + storeType + ", contactFirstName="
+                + contactFirstName + ", contactLastName=" + contactLastName
+                + ", storeDetail=" + getStoreDetail() + ", parentStore="
+                + parentStore + ", childStores=" + childStores + "]";
     }
 }

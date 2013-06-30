@@ -16,6 +16,7 @@ import com.brainmaster.apps.invoicing.model.Brand;
 import com.brainmaster.apps.invoicing.model.Category;
 import com.brainmaster.apps.invoicing.model.PackagingUnit;
 import com.brainmaster.apps.invoicing.model.Product;
+import com.brainmaster.apps.invoicing.model.ProductStore;
 import com.brainmaster.apps.invoicing.model.Role;
 import com.brainmaster.apps.invoicing.model.Store;
 import com.brainmaster.apps.invoicing.model.StoreDetail;
@@ -105,6 +106,16 @@ public class IntegrationModelRepositoryBean {
 	}
 	save(user);
 	return user;
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public Store createProductForStore(Store store, List<Product> products) {
+        for(Product product : products) {
+            store = getStoreFromKey(store.getKeys());
+            store.getProducts().add(new ProductStore(store.getKeys().getAccount(), product, store));
+        }
+        save(store);
+        return store;
     }
 
     public User getUser(String email) {
