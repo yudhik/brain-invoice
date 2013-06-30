@@ -110,11 +110,11 @@ public class Store implements Serializable {
     }
 
     public List<User> getUsers() {
-        return users;
+	return users;
     }
 
     public void setUsers(List<User> users) {
-        this.users = users;
+	this.users = users;
     }
 
     public void setStoreName(String storeName) {

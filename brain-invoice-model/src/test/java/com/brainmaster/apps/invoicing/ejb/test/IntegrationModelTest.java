@@ -47,19 +47,12 @@ public class IntegrationModelTest extends Arquillian {
             .getLogger(IntegrationModelTest.class);
 
     private static final String EMAIL_ID = "mail@yahoo.com";
-
     private static final String BRAND_NAME = "ABC";
-
     private static final String CATEGORY_NAME = "CBA";
-
     private static final String PACKAGING_CODE = "KG";
-
     private static final String A_STORE_NAME = "My Store";
-
     private static final String ANONYMOUS_ROLE = "ANONYMOUS";
-
     private static final String USER_ROLE = "USER";
-    
     private static final String PRODUCT_CODE1 = "A10001";
     private static final String PRODUCT_CODE2 = "A10002";
 
@@ -67,9 +60,7 @@ public class IntegrationModelTest extends Arquillian {
     private IntegrationModelRepositoryBean repositoryBean;
 
     private static final UUID ACCOUNT_UUID = UUID.randomUUID();
-
     private static final UUID USER_ID = UUID.randomUUID();
-
     private static final UUID STORE_ID = UUID.randomUUID();
 
     @Deployment
@@ -243,7 +234,6 @@ public class IntegrationModelTest extends Arquillian {
         Role userRole = repositoryBean.save(new Role(USER_ROLE, "defined user"));
         Assert.assertNotNull(repositoryBean.getRoleFromKey(userRole.getRoleId()),
                 "user role is not save");
-
     }
 
     @Test(dependsOnMethods = {"testCreatingRole"})
