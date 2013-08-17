@@ -9,6 +9,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Hibernate;
 
 import com.brainmaster.apps.invoicing.model.Account;
@@ -25,8 +26,6 @@ import com.brainmaster.apps.invoicing.model.UserRole;
 import com.brainmaster.apps.invoicing.model.id.BrandAccountKeys;
 import com.brainmaster.apps.invoicing.model.id.CategoryAccountKeys;
 import com.brainmaster.apps.invoicing.model.id.PackagingAccountKeys;
-import com.brainmaster.apps.invoicing.model.id.ProductAccountKeys;
-import com.brainmaster.apps.invoicing.model.id.StoreAccountKeys;
 import com.brainmaster.apps.invoicing.model.id.UserRoleKeys;
 
 @Stateless
@@ -97,25 +96,28 @@ public class IntegrationModelRepositoryBean {
 	em.flush();
 	return role;
     }
-    
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User createUserWithRoles(User user, List<Role> roles) {
-	for(Role role : roles) {
+	for (Role role : roles) {
 	    user = getUser(user.getEmailAddress());
 	    user.getUserRoles().add(new UserRole(new UserRoleKeys(user, role)));
 	}
-	save(user);
+	user = save(user);
+	Hibernate.initialize(user.getUserRoles());
 	return user;
     }
-    
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Store createProductForStore(Store store, List<Product> products) {
-        for(Product product : products) {
-            store = getStoreFromKey(store.getKeys());
-            store.getProducts().add(new ProductStore(store.getKeys().getAccount(), product, store));
-        }
-        save(store);
-        return store;
+	for (Product product : products) {
+	    store = getStoreFromKey(store.getStoreId(), true, true);
+	    store.getProducts().add(
+		    new ProductStore(store.getAccount(), product, store));
+	}
+	store = save(store);
+	Hibernate.initialize(store.getProducts());
+	return store;
     }
 
     public User getUser(String email) {
@@ -123,12 +125,9 @@ public class IntegrationModelRepositoryBean {
 		.setParameter("email", email).getSingleResult();
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Account getAccountFromKey(UUID accountUuid) {
 	return em.find(Account.class, accountUuid);
-    }
-
-    public Account getReference(UUID accountUuid) {
-	return em.getReference(Account.class, accountUuid);
     }
 
     public Brand getBrandFromKey(BrandAccountKeys brandAccountKeys) {
@@ -156,20 +155,16 @@ public class IntegrationModelRepositoryBean {
 	return em.getReference(PackagingUnit.class, packagingAccountKeys);
     }
 
-    public Product getProductFromKey(ProductAccountKeys productAccountKeys) {
-	return em.find(Product.class, productAccountKeys);
+    public Product getProductFromCode(Account account, String productCode) {
+	assert (account != null && !StringUtils.isEmpty(productCode));
+	return em.createNamedQuery("product-with-code", Product.class)
+		.setParameter("account", account)
+		.setParameter("productCode", productCode).getSingleResult();
     }
 
-    public Product getReference(ProductAccountKeys productAccountKeys) {
-	return em.getReference(Product.class, productAccountKeys);
-    }
-
-    public Store getStoreFromKey(StoreAccountKeys storeAccountKeys) {
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public Store getStoreFromKey(UUID storeAccountKeys) {
 	return getStoreFromKey(storeAccountKeys, false);
-    }
-
-    public Store getReference(StoreAccountKeys storeAccountKeys) {
-	return em.getReference(Store.class, storeAccountKeys);
     }
 
     public Role getRoleFromKey(String roleId) {
@@ -177,15 +172,16 @@ public class IntegrationModelRepositoryBean {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Store getStoreFromKey(StoreAccountKeys storeAccountKeys,
-	    boolean fetchChild) {
-	return getStoreFromKey(storeAccountKeys, true, false);
+    public Store getStoreFromKey(UUID storeId, boolean fetchChild) {
+	return getStoreFromKey(storeId, true, false);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Store getStoreFromKey(StoreAccountKeys storeAccountKeys,
-	    boolean fetchChild, boolean fetchUser) {
-	Store store = em.find(Store.class, storeAccountKeys);
+    public Store getStoreFromKey(UUID storeId, boolean fetchChild,
+	    boolean fetchUser) {
+	assert (em != null);
+	Store store = em.find(Store.class, storeId);
+	assert (store != null);
 	if (fetchChild)
 	    Hibernate.initialize(store.getChildStores());
 	if (fetchUser)
@@ -228,6 +224,13 @@ public class IntegrationModelRepositoryBean {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<Store> getAllStoreFromAccount(Account account) {
 	Account myAccount = em.find(Account.class, account.getAccountUuid());
+	Hibernate.initialize(myAccount.getStores());
+	return myAccount.getStores();
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public List<Store> getAllStoreFromAccountId(UUID accountId) {
+	Account myAccount = em.find(Account.class, accountId);
 	Hibernate.initialize(myAccount.getStores());
 	return myAccount.getStores();
     }

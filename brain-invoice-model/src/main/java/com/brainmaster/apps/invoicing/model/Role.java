@@ -52,7 +52,6 @@ public class Role implements Serializable {
 	this.description = description;
     }
 
-
     public List<UserRole> getUserRoles() {
 	return userRoles;
     }

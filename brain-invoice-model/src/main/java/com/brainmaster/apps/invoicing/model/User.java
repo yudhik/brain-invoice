@@ -12,7 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -59,7 +58,7 @@ public class User implements Serializable {
     private String lastName;
 
     @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
-    @JoinColumns({ @JoinColumn(name = "uuid"), @JoinColumn(name = "account_id") })
+    @JoinColumn(name = "store_id")
     private Store store;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -1,23 +1,23 @@
 package com.brainmaster.apps.invoicing.model;
 
 import java.io.Serializable;
+import java.util.UUID;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.PrimaryKeyJoinColumns;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
 
 import com.brainmaster.apps.invoicing.model.ext.BankInformation;
 import com.brainmaster.apps.invoicing.model.ext.CompanyInformation;
-import com.brainmaster.apps.invoicing.model.id.StoreAccountKeys;
+import com.brainmaster.util.DatabaseColumnConstant;
 
 @Entity
 @Table(name = "store_detail")
@@ -25,15 +25,13 @@ public class StoreDetail implements Serializable {
 
     private static final long serialVersionUID = -1462474216780036654L;
 
-    @EmbeddedId
-    @AttributeOverrides({
-	    @AttributeOverride(name = "account_id", column = @Column(name = "account_id")),
-	    @AttributeOverride(name = "uuid", column = @Column(name = "uuid")) })
-    private StoreAccountKeys storeAccountKeys;
-
+    @Id
+    @Type(type = "uuid")
+    @Column(name = "store_id", length = DatabaseColumnConstant.SIZE_UUID)
+    private UUID storeId;
+    
     @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumns({ @PrimaryKeyJoinColumn(name = "account_id"),
-	    @PrimaryKeyJoinColumn(name = "uuid") })
+    @PrimaryKeyJoinColumn(name = "store_id")
     private Store store;
 
     @Embedded
@@ -47,8 +45,8 @@ public class StoreDetail implements Serializable {
 
     public StoreDetail(Store store, CompanyInformation companyInformation,
 	    BankInformation bankInformation) {
+	this.storeId = store.getStoreId();
 	this.store = store;
-	this.storeAccountKeys = store.getKeys();
 	this.companyInformation = companyInformation;
 	this.bankInformation = bankInformation;
     }
@@ -77,21 +75,11 @@ public class StoreDetail implements Serializable {
 	this.bankInformation = bankInformation;
     }
 
-    public StoreAccountKeys getStoreAccountKeys() {
-	return storeAccountKeys;
-    }
-
-    public void setStoreAccountKeys(StoreAccountKeys storeAccountKeys) {
-	this.storeAccountKeys = storeAccountKeys;
-    }
-
     @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime
-		* result
-		+ ((storeAccountKeys == null) ? 0 : storeAccountKeys.hashCode());
+	result = prime * result + ((store == null) ? 0 : store.hashCode());
 	return result;
     }
 
@@ -104,19 +92,23 @@ public class StoreDetail implements Serializable {
 	if (getClass() != obj.getClass())
 	    return false;
 	StoreDetail other = (StoreDetail) obj;
-	if (storeAccountKeys == null) {
-	    if (other.storeAccountKeys != null)
+	if (store == null) {
+	    if (other.store != null)
 		return false;
-	} else if (!storeAccountKeys.equals(other.storeAccountKeys))
+	} else if (!store.equals(other.store))
 	    return false;
 	return true;
     }
 
     @Override
     public String toString() {
-	return "StoreDetail [storeAccountKeys=" + storeAccountKeys
-		+ ", companyInformation=" + companyInformation
-		+ ", bankInformation=" + bankInformation + "]";
+	StringBuilder builder = new StringBuilder();
+	builder.append("StoreDetail [companyInformation=");
+	builder.append(companyInformation);
+	builder.append(", bankInformation=");
+	builder.append(bankInformation);
+	builder.append("]");
+	return builder.toString();
     }
 
 }

@@ -58,10 +58,10 @@ public class Account implements Serializable {
     @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PackagingUnit> packagingUnits = new ArrayList<PackagingUnit>();
 
-    @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Product> products = new ArrayList<Product>();
 
-    @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Store> stores = new ArrayList<Store>();
 
     // @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade =

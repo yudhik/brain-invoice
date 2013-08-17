@@ -22,28 +22,30 @@ import com.brainmaster.apps.invoicing.service.MemberRegistration;
 @Model
 public class MemberController {
 
-   @Inject
-   private FacesContext facesContext;
+    @Inject
+    private FacesContext facesContext;
 
-   @Inject
-   private MemberRegistration memberRegistration;
+    @Inject
+    private MemberRegistration memberRegistration;
 
-   private Member newMember;
+    private Member newMember;
 
-   @Produces
-   @Named
-   public Member getNewMember() {
-      return newMember;
-   }
+    @Produces
+    @Named
+    public Member getNewMember() {
+	return newMember;
+    }
 
-   public void register() throws Exception {
-      memberRegistration.register(newMember);
-      facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Registered!", "Registration successful"));
-      initNewMember();
-   }
+    public void register() throws Exception {
+	memberRegistration.register(newMember);
+	facesContext.addMessage(null, new FacesMessage(
+		FacesMessage.SEVERITY_INFO, "Registered!",
+		"Registration successful"));
+	initNewMember();
+    }
 
-   @PostConstruct
-   public void initNewMember() {
-      newMember = new Member();
-   }
+    @PostConstruct
+    public void initNewMember() {
+	newMember = new Member();
+    }
 }

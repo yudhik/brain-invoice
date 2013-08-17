@@ -7,30 +7,39 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.brainmaster.apps.invoicing.model.ext.StoreType;
-import com.brainmaster.apps.invoicing.model.id.StoreAccountKeys;
+import com.brainmaster.util.DatabaseColumnConstant;
 import com.brainmaster.util.helper.uuid.UUIDHelper;
 
 @Entity
-@Table(name = "store")
+@Table(name = "store", uniqueConstraints = @UniqueConstraint(columnNames = {"store_id", "account_id"}))
 public class Store implements Serializable {
 
     private static final long serialVersionUID = 5947838295063055068L;
 
-    @EmbeddedId
-    private StoreAccountKeys keys;
+    @Id
+    @Type(type = "uuid")
+    @Column(name = "store_id", length = DatabaseColumnConstant.SIZE_UUID)
+    private UUID storeId;
+    
+    @ManyToOne(targetEntity = Account.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     @NotNull
     @NotBlank
@@ -61,52 +70,60 @@ public class Store implements Serializable {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<User>();
 
-    @OneToMany(mappedBy = "keys.store", fetch = FetchType.LAZY, cascade =
-            CascadeType.ALL)
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProductStore> products = new ArrayList<ProductStore>();
 
     public Store() {
     }
 
-    public Store(Account account, UUID uuid, String storeName,
-            StoreType storeType, String contactFirstName, String contactLastName) {
-        keys = new StoreAccountKeys(account, uuid);
-        this.storeName = storeName;
-        this.storeType = storeType;
-        this.contactFirstName = contactFirstName;
-        this.contactLastName = contactLastName;
+    public Store(Account account, UUID storeId, String storeName,
+	    StoreType storeType, String contactFirstName, String contactLastName) {
+	this.account = account;
+	this.storeId = storeId;
+	this.storeName = storeName;
+	this.storeType = storeType;
+	this.contactFirstName = contactFirstName;
+	this.contactLastName = contactLastName;
+    }
+    
+    public UUID getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(UUID storeId) {
+        this.storeId = storeId;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     @Transient
-    public String getStoreId() {
-        if (keys != null) {
-            return UUIDHelper.uuidToString(keys.getUuid());
-        }
-        return null;
+    public String getStoreIdInString() {
+	if (storeId != null) {
+	    return UUIDHelper.uuidToString(storeId);
+	}
+	return null;
     }
 
     public Store getParentStore() {
-        return parentStore;
-    }
-
-    public StoreAccountKeys getKeys() {
-        return keys;
-    }
-
-    public void setKeys(StoreAccountKeys keys) {
-        this.keys = keys;
+	return parentStore;
     }
 
     public void setParentStore(Store parentStore) {
-        this.parentStore = parentStore;
+	this.parentStore = parentStore;
     }
 
     public List<Store> getChildStores() {
-        return childStores;
+	return childStores;
     }
 
     public void setChildStores(List<Store> childStores) {
-        this.childStores = childStores;
+	this.childStores = childStores;
     }
 
     public List<User> getUsers() {
@@ -118,89 +135,102 @@ public class Store implements Serializable {
     }
 
     public void setStoreName(String storeName) {
-        this.storeName = storeName;
+	this.storeName = storeName;
     }
 
     public String getStoreName() {
-        return storeName;
+	return storeName;
     }
 
     public void setProducts(List<ProductStore> products) {
-        this.products = products;
+	this.products = products;
     }
 
     public List<ProductStore> getProducts() {
-        return products;
+	return products;
     }
 
     public StoreType getStoreType() {
-        return storeType;
+	return storeType;
     }
 
     public void setStoreType(StoreType storeType) {
-        this.storeType = storeType;
+	this.storeType = storeType;
     }
 
     public String getContactFirstName() {
-        return contactFirstName;
+	return contactFirstName;
     }
 
     public void setContactFirstName(String contactFirstName) {
-        this.contactFirstName = contactFirstName;
+	this.contactFirstName = contactFirstName;
     }
 
     public String getContactLastName() {
-        return contactLastName;
+	return contactLastName;
     }
 
     public void setContactLastName(String contactLastName) {
-        this.contactLastName = contactLastName;
+	this.contactLastName = contactLastName;
+    }
+
+    public StoreDetail getStoreDetail() {
+	return storeDetail;
+    }
+    
+    public void setStoreDetail(StoreDetail storeDetail) {
+	this.storeDetail = storeDetail;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((keys == null) ? 0 : keys.hashCode());
-        return result;
-    }
-
-    public StoreDetail getStoreDetail() {
-        return storeDetail;
-    }
-
-    public void setStoreDetail(StoreDetail storeDetail) {
-        this.storeDetail = storeDetail;
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((storeId == null) ? 0 : storeId.hashCode());
+	return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Store other = (Store) obj;
-        if (keys == null) {
-            if (other.keys != null) {
-                return false;
-            }
-        } else if (!keys.equals(other.keys)) {
-            return false;
-        }
-        return true;
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Store other = (Store) obj;
+	if (storeId == null) {
+	    if (other.storeId != null)
+		return false;
+	} else if (!storeId.equals(other.storeId))
+	    return false;
+	return true;
     }
 
     @Override
     public String toString() {
-        return "Store [keys=" + keys + ", storeName=" + storeName
-                + ", storeType=" + storeType + ", contactFirstName="
-                + contactFirstName + ", contactLastName=" + contactLastName
-                + ", storeDetail=" + getStoreDetail() + ", parentStore="
-                + parentStore + ", childStores=" + childStores + "]";
+	StringBuilder builder = new StringBuilder();
+	builder.append("Store [storeId=");
+	builder.append(getStoreIdInString());
+	builder.append(", account=");
+	builder.append(account);
+	builder.append(", storeName=");
+	builder.append(storeName);
+	builder.append(", storeType=");
+	builder.append(storeType);
+	builder.append(", contactFirstName=");
+	builder.append(contactFirstName);
+	builder.append(", contactLastName=");
+	builder.append(contactLastName);
+	builder.append(", storeDetail=");
+	builder.append(storeDetail);
+	builder.append(", parentStore=");
+	builder.append(parentStore);
+	builder.append(", users=");
+	builder.append(users);
+	builder.append("]");
+	return builder.toString();
     }
+    
+    
 }

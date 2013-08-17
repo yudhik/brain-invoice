@@ -17,8 +17,8 @@ public class StoreAccountKeys extends AccountKeys implements Serializable {
     private static final long serialVersionUID = 1388325146281613599L;
 
     @Type(type = "uuid")
-    @Column(length = DatabaseColumnConstant.SIZE_UUID)
-    private UUID uuid;
+    @Column(name = "store_id", length = DatabaseColumnConstant.SIZE_UUID)
+    private UUID storeId;
 
     @Deprecated
     public StoreAccountKeys() {
@@ -26,22 +26,22 @@ public class StoreAccountKeys extends AccountKeys implements Serializable {
 
     public StoreAccountKeys(Account account, UUID uuid) {
 	super(account);
-	this.uuid = uuid;
+	this.storeId = uuid;
     }
 
     public UUID getUuid() {
-	return uuid;
+	return storeId;
     }
 
     public void setUuid(UUID uuid) {
-	this.uuid = uuid;
+	this.storeId = uuid;
     }
 
     @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = super.hashCode();
-	result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
+	result = prime * result + ((storeId == null) ? 0 : storeId.hashCode());
 	return result;
     }
 
@@ -54,16 +54,16 @@ public class StoreAccountKeys extends AccountKeys implements Serializable {
 	if (getClass() != obj.getClass())
 	    return false;
 	StoreAccountKeys other = (StoreAccountKeys) obj;
-	if (uuid == null) {
-	    if (other.uuid != null)
+	if (storeId == null) {
+	    if (other.storeId != null)
 		return false;
-	} else if (!uuid.equals(other.uuid))
+	} else if (!storeId.equals(other.storeId))
 	    return false;
 	return true;
     }
 
     @Override
     public String toString() {
-	return "StoreAccountKeys [uuid=" + uuid + "]";
+	return "StoreAccountKeys [uuid=" + storeId + "]";
     }
 }
