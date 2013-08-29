@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model;
+package com.brainmaster.apps.invoicing.core.model;
 
 import java.io.Serializable;
 
@@ -7,11 +7,13 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.brainmaster.apps.invoicing.model.id.PackagingAccountKeys;
+import com.brainmaster.apps.invoicing.core.model.credential.Account;
+import com.brainmaster.apps.invoicing.core.model.credential.User;
+import com.brainmaster.apps.invoicing.core.model.id.PackagingAccountKeys;
 
 @Entity
 @Table(name = "packaging")
-public class PackagingUnit implements Serializable {
+public class PackagingUnit extends AbstractUpdateBy implements Serializable {
 
     private static final long serialVersionUID = 1297099907148015361L;
 
@@ -21,10 +23,21 @@ public class PackagingUnit implements Serializable {
     @Column(name = "packaging_name")
     private String packagingName;
 
+    @Deprecated
     public PackagingUnit() {
+	super(null, null);
     }
-
-    public PackagingUnit(PackagingAccountKeys keys, String packagingName) {
+    
+    public PackagingUnit(Account account, String packagingId, String packagingName,
+	    User createdBy, User updatedBy) {
+	super(createdBy, updatedBy);
+	this.keys = new PackagingAccountKeys(account, packagingId);
+	this.packagingName = packagingName;
+    }
+    
+    public PackagingUnit(PackagingAccountKeys keys, String packagingName,
+	    User createdBy, User updatedBy) {
+	super(createdBy, updatedBy);
 	this.keys = keys;
 	this.packagingName = packagingName;
     }

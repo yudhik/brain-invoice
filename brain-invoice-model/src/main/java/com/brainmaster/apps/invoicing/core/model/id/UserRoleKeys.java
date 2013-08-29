@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model.id;
+package com.brainmaster.apps.invoicing.core.model.id;
 
 import java.io.Serializable;
 
@@ -6,8 +6,8 @@ import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.brainmaster.apps.invoicing.model.Role;
-import com.brainmaster.apps.invoicing.model.User;
+import com.brainmaster.apps.invoicing.core.model.credential.Role;
+import com.brainmaster.apps.invoicing.core.model.credential.User;
 
 @Embeddable
 public class UserRoleKeys implements Serializable {

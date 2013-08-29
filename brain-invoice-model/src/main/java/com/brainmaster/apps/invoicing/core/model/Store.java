@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model;
+package com.brainmaster.apps.invoicing.core.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,13 +22,15 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.brainmaster.apps.invoicing.model.ext.StoreType;
+import com.brainmaster.apps.invoicing.core.model.credential.Account;
+import com.brainmaster.apps.invoicing.core.model.credential.User;
+import com.brainmaster.apps.invoicing.core.model.ext.StoreType;
 import com.brainmaster.util.DatabaseColumnConstant;
 import com.brainmaster.util.helper.uuid.UUIDHelper;
 
 @Entity
 @Table(name = "store", uniqueConstraints = @UniqueConstraint(columnNames = {"store_id", "account_id"}))
-public class Store implements Serializable {
+public class Store extends AbstractUpdateBy implements Serializable {
 
     private static final long serialVersionUID = 5947838295063055068L;
 
@@ -47,7 +49,7 @@ public class Store implements Serializable {
     private String storeName;
 
     @NotNull
-    @Column(name = "store_type")
+    @Column(name = "store_type", nullable=false)
     private StoreType storeType;
 
     @NotNull
@@ -67,17 +69,20 @@ public class Store implements Serializable {
     @OneToMany(mappedBy = "parentStore", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Store> childStores = new ArrayList<Store>();
 
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<User> users = new ArrayList<User>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<UserStore> userStores = new ArrayList<UserStore>();
 
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProductStore> products = new ArrayList<ProductStore>();
 
+    @Deprecated
     public Store() {
+	super(null, null);
     }
-
+    
     public Store(Account account, UUID storeId, String storeName,
-	    StoreType storeType, String contactFirstName, String contactLastName) {
+	    StoreType storeType, String contactFirstName, String contactLastName, User createdBy, User updatedBy) {
+	super(createdBy, updatedBy);
 	this.account = account;
 	this.storeId = storeId;
 	this.storeName = storeName;
@@ -126,12 +131,12 @@ public class Store implements Serializable {
 	this.childStores = childStores;
     }
 
-    public List<User> getUsers() {
-	return users;
+    public List<UserStore> getUserStores() {
+	return userStores;
     }
 
-    public void setUsers(List<User> users) {
-	this.users = users;
+    public void setUsers(List<UserStore> userStores) {
+	this.userStores = userStores;
     }
 
     public void setStoreName(String storeName) {
@@ -227,7 +232,7 @@ public class Store implements Serializable {
 	builder.append(", parentStore=");
 	builder.append(parentStore);
 	builder.append(", users=");
-	builder.append(users);
+	builder.append(userStores);
 	builder.append("]");
 	return builder.toString();
     }

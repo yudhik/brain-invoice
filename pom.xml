@@ -23,7 +23,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Define the version of JBoss' Java EE 6 APIs and Tools we want 
             to import. -->
-        <jboss.bom.version>1.0.0.Final</jboss.bom.version>
+        <jboss.bom.version>1.0.7.CR8</jboss.bom.version>
         <!-- Alternatively, comment out the above line, and un-comment the 
             line below to use version 1.0.0.M12-redhat-1 which is a release certified 
             to work with JBoss EAP 6. It requires you have access to the JBoss EAP 6 
@@ -73,6 +73,22 @@
             <dependency>
                 <groupId>org.jboss.bom</groupId>
                 <artifactId>jboss-javaee-6.0-with-hibernate</artifactId>
+                <version>${jboss.bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+	    <dependency>
+                <groupId>org.jboss.bom</groupId>
+                <artifactId>jboss-javaee-6.0-with-deltaspike</artifactId>
+                <version>${jboss.bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.jboss.bom</groupId>
+                <artifactId>jboss-javaee-6.0-with-security</artifactId>
                 <version>${jboss.bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>

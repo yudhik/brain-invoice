@@ -57,6 +57,17 @@
 			<artifactId>hibernate-validator-annotation-processor</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.5</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.testng</groupId>
@@ -104,16 +115,6 @@
 			<type>pom</type>
 		</dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.5</version>
-		</dependency>
 	</dependencies>
 
 </project>

@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model.ext;
+package com.brainmaster.apps.invoicing.core.model.ext;
 
 public enum DocumentType {
     ORDER("PO"), DELIVERY_ORDER("DO"), RECIEVING_ADVISE("RA"), INVOICE("INV");

@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model;
+package com.brainmaster.apps.invoicing.core.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,11 +13,13 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.brainmaster.apps.invoicing.model.id.BrandAccountKeys;
+import com.brainmaster.apps.invoicing.core.model.credential.Account;
+import com.brainmaster.apps.invoicing.core.model.credential.User;
+import com.brainmaster.apps.invoicing.core.model.id.BrandAccountKeys;
 
 @Entity
 @Table(name = "brand")
-public class Brand implements Serializable {
+public class Brand extends AbstractUpdateBy implements Serializable {
 
     private static final long serialVersionUID = -1603771716730111235L;
 
@@ -26,12 +28,20 @@ public class Brand implements Serializable {
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<Product>();
-
+    
+    @Deprecated
     public Brand() {
+	super(null, null);
     }
 
-    public Brand(Account account, String brandName) {
-	keys = new BrandAccountKeys(account, brandName);
+    public Brand(Account account, String brandName, User createdBy, User updatedBy) {
+	super(createdBy, updatedBy);
+	this.keys = new BrandAccountKeys(account, brandName);
+    }
+    
+    public Brand(BrandAccountKeys keys, User createdBy, User updatedBy) {
+	super(createdBy, updatedBy);
+	this.keys = keys;
     }
 
     public BrandAccountKeys getKeys() {

@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model;
+package com.brainmaster.apps.invoicing.core.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,11 +16,13 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.brainmaster.apps.invoicing.model.id.CategoryAccountKeys;
+import com.brainmaster.apps.invoicing.core.model.credential.Account;
+import com.brainmaster.apps.invoicing.core.model.credential.User;
+import com.brainmaster.apps.invoicing.core.model.id.CategoryAccountKeys;
 
 @Entity
 @Table(name = "category")
-public class Category implements Serializable {
+public class Category extends AbstractUpdateBy implements Serializable {
 
     private static final long serialVersionUID = -4114451169235211979L;
 
@@ -39,16 +41,32 @@ public class Category implements Serializable {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<Product>();
 
+    @Deprecated
     public Category() {
+	super(null, null);
     }
-
-    public Category(Account account, String categoryName) {
+    
+    public Category(Account account, String categoryName, User createdBy, User updatedBy) {
+	super(createdBy, updatedBy);
 	this.keys = new CategoryAccountKeys(account, categoryName);
     }
+    
+    public Category(CategoryAccountKeys keys, User createdBy, User updatedBy) {
+	super(createdBy, updatedBy);
+	this.keys = keys;
+    }
 
-    public Category(Account account, String categoryName,
-	    Category parentCategory) {
+    public Category(Account account, String categoryName, Category parentCategory,
+	    User createdBy, User updatedBy) {
+	super(createdBy, updatedBy);
 	this.keys = new CategoryAccountKeys(account, categoryName);
+	this.parentCategory = parentCategory;
+    }
+    
+    public Category(CategoryAccountKeys keys, Category parentCategory,
+	    User createdBy, User updatedBy) {
+	super(createdBy, updatedBy);
+	this.keys = keys;
 	this.parentCategory = parentCategory;
     }
 

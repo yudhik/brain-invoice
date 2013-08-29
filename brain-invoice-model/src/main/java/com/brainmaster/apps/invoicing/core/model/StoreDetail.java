@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model;
+package com.brainmaster.apps.invoicing.core.model;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -15,8 +15,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
-import com.brainmaster.apps.invoicing.model.ext.BankInformation;
-import com.brainmaster.apps.invoicing.model.ext.CompanyInformation;
+import com.brainmaster.apps.invoicing.core.model.ext.BankInformation;
+import com.brainmaster.apps.invoicing.core.model.ext.CompanyInformation;
 import com.brainmaster.util.DatabaseColumnConstant;
 
 @Entity

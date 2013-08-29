@@ -1,7 +1,7 @@
-package com.brainmaster.apps.invoicing.model.ext;
+package com.brainmaster.apps.invoicing.core.model.ext;
 
 public enum StoreType {
-    CUSTOMER("customer"), VENDOR("vendor"), BRANCH("branch");
+    CUSTOMER("customer"), VENDOR("vendor");
 
     private String storeTypeName;
 

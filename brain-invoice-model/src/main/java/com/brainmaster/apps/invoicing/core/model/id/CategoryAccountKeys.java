@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model.id;
+package com.brainmaster.apps.invoicing.core.model.id;
 
 import java.io.Serializable;
 
@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.brainmaster.apps.invoicing.model.Account;
+import com.brainmaster.apps.invoicing.core.model.credential.Account;
 
 public class CategoryAccountKeys extends AccountKeys implements Serializable {
 

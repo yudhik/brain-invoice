@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model.id;
+package com.brainmaster.apps.invoicing.core.model.id;
 
 import java.io.Serializable;
 
@@ -8,7 +8,7 @@ import javax.persistence.Embeddable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.brainmaster.apps.invoicing.model.Account;
+import com.brainmaster.apps.invoicing.core.model.credential.Account;
 
 @Embeddable
 public class ProductAccountKeys extends AccountKeys implements Serializable {

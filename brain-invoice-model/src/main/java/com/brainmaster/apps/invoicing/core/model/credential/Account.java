@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model;
+package com.brainmaster.apps.invoicing.core.model.credential;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -21,6 +22,11 @@ import org.hibernate.annotations.TypeDefs;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.brainmaster.apps.invoicing.core.model.Brand;
+import com.brainmaster.apps.invoicing.core.model.Category;
+import com.brainmaster.apps.invoicing.core.model.PackagingUnit;
+import com.brainmaster.apps.invoicing.core.model.Product;
+import com.brainmaster.apps.invoicing.core.model.Store;
 import com.brainmaster.util.DatabaseColumnConstant;
 import com.brainmaster.util.helper.uuid.UUIDHelper;
 import com.brainmaster.util.types.UUIDType;
@@ -28,6 +34,7 @@ import com.brainmaster.util.types.UUIDType;
 @Entity
 @TypeDefs({ @TypeDef(name = "uuid", typeClass = UUIDType.class) })
 @Table(name = "account")
+@NamedQuery(name = "all-account", query = "from Account")
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 5856204102955357752L;
@@ -64,9 +71,8 @@ public class Account implements Serializable {
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Store> stores = new ArrayList<Store>();
 
-    // @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL)
-    // private List<User> users = new ArrayList<User>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<User> users = new ArrayList<User>();
 
     public Account() {
     }
@@ -178,6 +184,14 @@ public class Account implements Serializable {
     // public void setUsers(List<User> users) {
     // this.users = users;
     // }
+
+    public List<User> getUsers() {
+	return users;
+    }
+
+    public void setUsers(List<User> users) {
+	this.users = users;
+    }
 
     @Override
     public int hashCode() {

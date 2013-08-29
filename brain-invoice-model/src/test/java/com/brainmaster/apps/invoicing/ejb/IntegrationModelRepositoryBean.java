@@ -12,21 +12,22 @@ import javax.persistence.PersistenceContext;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Hibernate;
 
-import com.brainmaster.apps.invoicing.model.Account;
-import com.brainmaster.apps.invoicing.model.Brand;
-import com.brainmaster.apps.invoicing.model.Category;
-import com.brainmaster.apps.invoicing.model.PackagingUnit;
-import com.brainmaster.apps.invoicing.model.Product;
-import com.brainmaster.apps.invoicing.model.ProductStore;
-import com.brainmaster.apps.invoicing.model.Role;
-import com.brainmaster.apps.invoicing.model.Store;
-import com.brainmaster.apps.invoicing.model.StoreDetail;
-import com.brainmaster.apps.invoicing.model.User;
-import com.brainmaster.apps.invoicing.model.UserRole;
-import com.brainmaster.apps.invoicing.model.id.BrandAccountKeys;
-import com.brainmaster.apps.invoicing.model.id.CategoryAccountKeys;
-import com.brainmaster.apps.invoicing.model.id.PackagingAccountKeys;
-import com.brainmaster.apps.invoicing.model.id.UserRoleKeys;
+import com.brainmaster.apps.invoicing.core.model.Brand;
+import com.brainmaster.apps.invoicing.core.model.Category;
+import com.brainmaster.apps.invoicing.core.model.PackagingUnit;
+import com.brainmaster.apps.invoicing.core.model.Product;
+import com.brainmaster.apps.invoicing.core.model.ProductStore;
+import com.brainmaster.apps.invoicing.core.model.Store;
+import com.brainmaster.apps.invoicing.core.model.StoreDetail;
+import com.brainmaster.apps.invoicing.core.model.UserStore;
+import com.brainmaster.apps.invoicing.core.model.credential.Account;
+import com.brainmaster.apps.invoicing.core.model.credential.Role;
+import com.brainmaster.apps.invoicing.core.model.credential.User;
+import com.brainmaster.apps.invoicing.core.model.credential.UserRole;
+import com.brainmaster.apps.invoicing.core.model.id.BrandAccountKeys;
+import com.brainmaster.apps.invoicing.core.model.id.CategoryAccountKeys;
+import com.brainmaster.apps.invoicing.core.model.id.PackagingAccountKeys;
+import com.brainmaster.apps.invoicing.core.model.id.UserRoleKeys;
 
 @Stateless
 public class IntegrationModelRepositoryBean {
@@ -100,7 +101,7 @@ public class IntegrationModelRepositoryBean {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User createUserWithRoles(User user, List<Role> roles) {
 	for (Role role : roles) {
-	    user = getUser(user.getEmailAddress());
+	    user = getUser(user.getEmailAddress(), false);
 	    user.getUserRoles().add(new UserRole(new UserRoleKeys(user, role)));
 	}
 	user = save(user);
@@ -109,22 +110,44 @@ public class IntegrationModelRepositoryBean {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Store createProductForStore(Store store, List<Product> products) {
+    public Store createProductForStore(Store store, List<Product> products, User createBy) {
 	for (Product product : products) {
 	    store = getStoreFromKey(store.getStoreId(), true, true);
 	    store.getProducts().add(
-		    new ProductStore(store.getAccount(), product, store));
+		    new ProductStore(store.getAccount(), product, store, createBy));
 	}
 	store = save(store);
 	Hibernate.initialize(store.getProducts());
 	return store;
     }
 
-    public User getUser(String email) {
-	return em.createNamedQuery("user-with-email", User.class)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public User getUser(String email, boolean fetchAccount) {
+	User user = em.createNamedQuery("user-with-email", User.class)
 		.setParameter("email", email).getSingleResult();
+	if(user != null && fetchAccount){
+	    Hibernate.initialize(user.getAccount());
+	}
+	return user;
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public Account addUserFromAccount(UUID accountUuid, User user) {
+	Account account = getAccountFromKey(accountUuid);
+	Hibernate.initialize(account.getUsers());
+	account.getUsers().add(user);
+	account = save(account);
+	return account;
+    }
+    
+    public Store addUserFromStore(UUID storeId, User user) {
+	Store store = getStoreFromKey(storeId);
+	Hibernate.initialize(user.getAccount());
+	store.getUserStores().add(new UserStore(user.getAccount(), store));
+	store = save(store);
+	return store;
+    }
+    
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Account getAccountFromKey(UUID accountUuid) {
 	return em.find(Account.class, accountUuid);
@@ -185,7 +208,7 @@ public class IntegrationModelRepositoryBean {
 	if (fetchChild)
 	    Hibernate.initialize(store.getChildStores());
 	if (fetchUser)
-	    Hibernate.initialize(store.getUsers());
+	    Hibernate.initialize(store.getUserStores());
 	return store;
     }
 
@@ -234,4 +257,5 @@ public class IntegrationModelRepositoryBean {
 	Hibernate.initialize(myAccount.getStores());
 	return myAccount.getStores();
     }
+
 }

@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model.id;
+package com.brainmaster.apps.invoicing.core.model.id;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -8,7 +8,7 @@ import javax.persistence.Embeddable;
 
 import org.hibernate.annotations.Type;
 
-import com.brainmaster.apps.invoicing.model.Account;
+import com.brainmaster.apps.invoicing.core.model.credential.Account;
 import com.brainmaster.util.DatabaseColumnConstant;
 
 @Embeddable

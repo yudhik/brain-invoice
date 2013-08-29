@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model;
+package com.brainmaster.apps.invoicing.core.model;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -13,12 +13,15 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Type;
 
+import com.brainmaster.apps.invoicing.core.model.credential.Account;
+import com.brainmaster.apps.invoicing.core.model.credential.User;
 import com.brainmaster.util.DatabaseColumnConstant;
 
 @Entity
 @Table(name = "product_store", uniqueConstraints = @UniqueConstraint(columnNames = {
 	"account_id", "product_id", "store_id" }))
-public class ProductStore implements Serializable {
+public class ProductStore extends AbstractCreateByEntity implements
+	Serializable {
 
     private static final long serialVersionUID = -7826385577001790718L;
 
@@ -39,11 +42,14 @@ public class ProductStore implements Serializable {
     @JoinColumn(name = "store_id")
     private Store store;
 
+    @Deprecated
     public ProductStore() {
-	this.productStoreId = UUID.randomUUID();
+	super(null);
     }
-
-    public ProductStore(Account account, Product product, Store store) {
+    
+    public ProductStore(Account account, Product product,
+	    Store store, User createdBy) {
+	super(createdBy);
 	this.productStoreId = UUID.randomUUID();
 	this.account = account;
 	this.product = product;

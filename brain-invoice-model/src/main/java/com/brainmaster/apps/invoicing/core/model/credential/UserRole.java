@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model;
+package com.brainmaster.apps.invoicing.core.model.credential;
 
 import java.io.Serializable;
 
@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
-import com.brainmaster.apps.invoicing.model.id.UserRoleKeys;
+import com.brainmaster.apps.invoicing.core.model.id.UserRoleKeys;
 
 @Entity
 @AssociationOverrides({

@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model;
+package com.brainmaster.apps.invoicing.core.model.credential;
 
 import java.io.Serializable;
 import java.util.ArrayList;

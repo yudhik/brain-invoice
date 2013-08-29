@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model.ext;
+package com.brainmaster.apps.invoicing.core.model.ext;
 
 import java.io.Serializable;
 

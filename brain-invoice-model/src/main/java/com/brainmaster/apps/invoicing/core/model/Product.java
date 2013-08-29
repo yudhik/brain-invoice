@@ -1,4 +1,4 @@
-package com.brainmaster.apps.invoicing.model;
+package com.brainmaster.apps.invoicing.core.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,12 +22,15 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Type;
 
+import com.brainmaster.apps.invoicing.core.model.credential.Account;
+import com.brainmaster.apps.invoicing.core.model.credential.User;
 import com.brainmaster.util.helper.uuid.UUIDHelper;
 
 @Entity
-@Table(name = "product", uniqueConstraints = @UniqueConstraint(columnNames = {"product_id", "product_code", "account_id"}))
+@Table(name = "product", uniqueConstraints = @UniqueConstraint(columnNames = {
+	"product_id", "product_code", "account_id" }))
 @NamedQueries({ @NamedQuery(name = "product-with-code", query = "from Product a where a.productCode = :productCode and a.account = :account") })
-public class Product implements Serializable {
+public class Product extends AbstractUpdateBy implements Serializable {
 
     private static final long serialVersionUID = -2520437947468554143L;
 
@@ -67,12 +70,15 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProductStore> stores = new ArrayList<ProductStore>();
 
+    @Deprecated
     public Product() {
+	super(null, null);
     }
-
+    
     public Product(Account account, String productCode, String productName,
 	    String barcodeNumber, Brand brand, Category category,
-	    PackagingUnit packageCode) {
+	    PackagingUnit packageCode, User createdBy, User updatedBy) {
+	super(createdBy, updatedBy);
 	this.productId = UUID.randomUUID();
 	this.account = account;
 	this.productCode = productCode;
@@ -218,7 +224,7 @@ public class Product implements Serializable {
     public String toString() {
 	StringBuilder builder = new StringBuilder();
 	builder.append("Product [productId=");
-	builder.append(productId);
+	builder.append(getProductIdInString());
 	builder.append(", productCode=");
 	builder.append(productCode);
 	builder.append(", account=");
