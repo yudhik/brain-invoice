@@ -29,243 +29,238 @@ import com.brainmaster.util.helper.uuid.UUIDHelper;
 @Table(name = "retail_document")
 public class RetailDocument extends AbstractCreateByEntity implements Serializable {
 
-    private static final long serialVersionUID = 3384319381495087568L;
+  private static final long serialVersionUID = 3384319381495087568L;
 
-    @Id
-    @Type(type = "uuid")
-    @Column(name = "document_id", length = DatabaseColumnConstant.SIZE_UUID)
-    private UUID documentId;
+  @Id
+  @Type(type = "uuid")
+  @Column(name = "document_id", length = DatabaseColumnConstant.SIZE_UUID)
+  private UUID documentId;
 
-    @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "sender_id")
-    private Store sender;
+  @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
+  @JoinColumn(name = "sender_id")
+  private Store sender;
 
-    @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipient_id")
-    private Store recipient;
+  @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
+  @JoinColumn(name = "recipient_id")
+  private Store recipient;
 
-    @Column(length = DatabaseColumnConstant.SIZE_DEFAULT)
-    private String reference;
+  @Column(length = DatabaseColumnConstant.SIZE_DEFAULT)
+  private String reference;
 
-    @Column(name = "document_type")
-    private DocumentType documentType;
+  @Column(name = "document_type")
+  private DocumentType documentType;
 
-    @Column(name = "document_status")
-    private DocumentStatus status;
+  @Column(name = "document_status")
+  private DocumentStatus status;
 
-    @Column(name = "date_created")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateCreated;
+  @Column(name = "date_created")
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date dateCreated;
 
-    @Column(name = "date_sent", nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateSent;
+  @Column(name = "date_sent", nullable = true)
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date dateSent;
 
-    @Column(name = "date_received", nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateReceived;
+  @Column(name = "date_received", nullable = true)
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date dateReceived;
 
-    @Column(name = "date_updated", nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateUpdated;
+  @Column(name = "date_updated", nullable = true)
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date dateUpdated;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "summary")
-    @PrimaryKeyJoinColumn
-    private RetailDocumentContent content;
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "summary")
+  @PrimaryKeyJoinColumn
+  private RetailDocumentContent content;
 
-    @Deprecated
-    public RetailDocument() {
-	super(null);
-    }
-    
-    public RetailDocument(Store sender, Store recipient, String reference,
-	    DocumentType documentType, DocumentStatus status, Date dateCreated,
-	    Date dateSent, Date dateReceived, Date dateUpdated,
-	    RetailDocumentContent content, User createdBy) {
-	super(createdBy);
-	this.documentId = UUID.randomUUID();
-	this.sender = sender;
-	this.recipient = recipient;
-	this.reference = reference;
-	this.documentType = documentType;
-	this.status = status;
-	this.dateCreated = dateCreated;
-	this.dateSent = dateSent;
-	this.dateReceived = dateReceived;
-	this.dateUpdated = dateUpdated;
-	this.content = content;
-    }
+  @Deprecated
+  public RetailDocument() {
+    super(null);
+  }
 
-    public UUID getDocumentId() {
-	return documentId;
-    }
+  public RetailDocument(Store sender, Store recipient, String reference, DocumentType documentType,
+      DocumentStatus status, Date dateCreated, Date dateSent, Date dateReceived, Date dateUpdated,
+      RetailDocumentContent content, User createdBy) {
+    super(createdBy);
+    this.documentId = UUID.randomUUID();
+    this.sender = sender;
+    this.recipient = recipient;
+    this.reference = reference;
+    this.documentType = documentType;
+    this.status = status;
+    this.dateCreated = dateCreated;
+    this.dateSent = dateSent;
+    this.dateReceived = dateReceived;
+    this.dateUpdated = dateUpdated;
+    this.content = content;
+  }
 
-    public void setDocumentId(UUID documentId) {
-	this.documentId = documentId;
-    }
-    
-    @Transient
-    public String getDocumentIdInString() {
-	if (documentId != null)
-	    return UUIDHelper.uuidToString(documentId);
-	return null;
-    }
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    RetailDocument other = (RetailDocument) obj;
+    if (documentId == null) {
+      if (other.documentId != null)
+        return false;
+    } else if (!documentId.equals(other.documentId))
+      return false;
+    if (documentType != other.documentType)
+      return false;
+    if (recipient == null) {
+      if (other.recipient != null)
+        return false;
+    } else if (!recipient.equals(other.recipient))
+      return false;
+    if (reference == null) {
+      if (other.reference != null)
+        return false;
+    } else if (!reference.equals(other.reference))
+      return false;
+    if (sender == null) {
+      if (other.sender != null)
+        return false;
+    } else if (!sender.equals(other.sender))
+      return false;
+    return true;
+  }
 
-    public Store getSender() {
-	return sender;
-    }
+  public RetailDocumentContent getContent() {
+    return content;
+  }
 
-    public void setSender(Store sender) {
-	this.sender = sender;
-    }
+  public Date getDateCreated() {
+    return dateCreated;
+  }
 
-    public Store getRecipient() {
-	return recipient;
-    }
+  public Date getDateReceived() {
+    return dateReceived;
+  }
 
-    public void setRecipient(Store recipient) {
-	this.recipient = recipient;
-    }
+  public Date getDateSent() {
+    return dateSent;
+  }
 
-    public String getReference() {
-	return reference;
-    }
+  public Date getDateUpdated() {
+    return dateUpdated;
+  }
 
-    public void setReference(String reference) {
-	this.reference = reference;
-    }
+  public UUID getDocumentId() {
+    return documentId;
+  }
 
-    public DocumentType getDocumentType() {
-	return documentType;
-    }
+  @Transient
+  public String getDocumentIdInString() {
+    if (documentId != null)
+      return UUIDHelper.uuidToString(documentId);
+    return null;
+  }
 
-    public void setDocumentType(DocumentType documentType) {
-	this.documentType = documentType;
-    }
+  public DocumentType getDocumentType() {
+    return documentType;
+  }
 
-    public DocumentStatus getStatus() {
-	return status;
-    }
+  public Store getRecipient() {
+    return recipient;
+  }
 
-    public void setStatus(DocumentStatus status) {
-	this.status = status;
-    }
+  public String getReference() {
+    return reference;
+  }
 
-    public Date getDateCreated() {
-	return dateCreated;
-    }
+  public Store getSender() {
+    return sender;
+  }
 
-    public void setDateCreated(Date dateCreated) {
-	this.dateCreated = dateCreated;
-    }
+  public DocumentStatus getStatus() {
+    return status;
+  }
 
-    public Date getDateSent() {
-	return dateSent;
-    }
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((documentId == null) ? 0 : documentId.hashCode());
+    result = prime * result + ((documentType == null) ? 0 : documentType.hashCode());
+    result = prime * result + ((recipient == null) ? 0 : recipient.hashCode());
+    result = prime * result + ((reference == null) ? 0 : reference.hashCode());
+    result = prime * result + ((sender == null) ? 0 : sender.hashCode());
+    return result;
+  }
 
-    public void setDateSent(Date dateSent) {
-	this.dateSent = dateSent;
-    }
+  public void setContent(RetailDocumentContent content) {
+    this.content = content;
+  }
 
-    public Date getDateReceived() {
-	return dateReceived;
-    }
+  public void setDateCreated(Date dateCreated) {
+    this.dateCreated = dateCreated;
+  }
 
-    public void setDateReceived(Date dateReceived) {
-	this.dateReceived = dateReceived;
-    }
+  public void setDateReceived(Date dateReceived) {
+    this.dateReceived = dateReceived;
+  }
 
-    public Date getDateUpdated() {
-	return dateUpdated;
-    }
+  public void setDateSent(Date dateSent) {
+    this.dateSent = dateSent;
+  }
 
-    public void setDateUpdated(Date dateUpdated) {
-	this.dateUpdated = dateUpdated;
-    }
+  public void setDateUpdated(Date dateUpdated) {
+    this.dateUpdated = dateUpdated;
+  }
 
-    public RetailDocumentContent getContent() {
-	return content;
-    }
+  public void setDocumentId(UUID documentId) {
+    this.documentId = documentId;
+  }
 
-    public void setContent(RetailDocumentContent content) {
-	this.content = content;
-    }
+  public void setDocumentType(DocumentType documentType) {
+    this.documentType = documentType;
+  }
 
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result
-		+ ((documentId == null) ? 0 : documentId.hashCode());
-	result = prime * result
-		+ ((documentType == null) ? 0 : documentType.hashCode());
-	result = prime * result
-		+ ((recipient == null) ? 0 : recipient.hashCode());
-	result = prime * result
-		+ ((reference == null) ? 0 : reference.hashCode());
-	result = prime * result + ((sender == null) ? 0 : sender.hashCode());
-	return result;
-    }
+  public void setRecipient(Store recipient) {
+    this.recipient = recipient;
+  }
 
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	RetailDocument other = (RetailDocument) obj;
-	if (documentId == null) {
-	    if (other.documentId != null)
-		return false;
-	} else if (!documentId.equals(other.documentId))
-	    return false;
-	if (documentType != other.documentType)
-	    return false;
-	if (recipient == null) {
-	    if (other.recipient != null)
-		return false;
-	} else if (!recipient.equals(other.recipient))
-	    return false;
-	if (reference == null) {
-	    if (other.reference != null)
-		return false;
-	} else if (!reference.equals(other.reference))
-	    return false;
-	if (sender == null) {
-	    if (other.sender != null)
-		return false;
-	} else if (!sender.equals(other.sender))
-	    return false;
-	return true;
-    }
+  public void setReference(String reference) {
+    this.reference = reference;
+  }
 
-    @Override
-    public String toString() {
-	StringBuilder builder = new StringBuilder();
-	builder.append("RetailDocument [documentId=");
-	builder.append(getDocumentIdInString());
-	builder.append(", sender=");
-	builder.append(sender);
-	builder.append(", recipient=");
-	builder.append(recipient);
-	builder.append(", reference=");
-	builder.append(reference);
-	builder.append(", documentType=");
-	builder.append(documentType);
-	builder.append(", status=");
-	builder.append(status);
-	builder.append(", dateCreated=");
-	builder.append(dateCreated);
-	builder.append(", dateSent=");
-	builder.append(dateSent);
-	builder.append(", dateReceived=");
-	builder.append(dateReceived);
-	builder.append(", dateUpdated=");
-	builder.append(dateUpdated);
-	builder.append("]");
-	return builder.toString();
-    }
+  public void setSender(Store sender) {
+    this.sender = sender;
+  }
+
+  public void setStatus(DocumentStatus status) {
+    this.status = status;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("RetailDocument [documentId=");
+    builder.append(getDocumentIdInString());
+    builder.append(", sender=");
+    builder.append(sender);
+    builder.append(", recipient=");
+    builder.append(recipient);
+    builder.append(", reference=");
+    builder.append(reference);
+    builder.append(", documentType=");
+    builder.append(documentType);
+    builder.append(", status=");
+    builder.append(status);
+    builder.append(", dateCreated=");
+    builder.append(dateCreated);
+    builder.append(", dateSent=");
+    builder.append(dateSent);
+    builder.append(", dateReceived=");
+    builder.append(dateReceived);
+    builder.append(", dateUpdated=");
+    builder.append(dateUpdated);
+    builder.append("]");
+    return builder.toString();
+  }
 
 }

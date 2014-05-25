@@ -16,88 +16,86 @@ import javax.persistence.Table;
 @Table(name = "role")
 public class Role implements Serializable {
 
-    private static final long serialVersionUID = 3440554143752137475L;
+  private static final long serialVersionUID = 3440554143752137475L;
 
-    @Id
-    @Column(name = "role_id", length = 150, nullable = false)
-    private String roleId;
+  @Id
+  @Column(name = "role_id", length = 150, nullable = false)
+  private String roleId;
 
-    @Column(length = 75, nullable = false)
-    private String description;
+  @Column(length = 75, nullable = false)
+  private String description;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<UserRole> userRoles = new ArrayList<UserRole>();
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private List<UserRole> userRoles = new ArrayList<UserRole>();
 
-    public Role() {
-    }
+  public Role() {}
 
-    public Role(String roleId, String description) {
-	this.roleId = roleId;
-	this.description = description;
-    }
+  public Role(String roleId, String description) {
+    this.roleId = roleId;
+    this.description = description;
+  }
 
-    public String getRoleId() {
-	return roleId;
-    }
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Role other = (Role) obj;
+    if (description == null) {
+      if (other.description != null)
+        return false;
+    } else if (!description.equals(other.description))
+      return false;
+    if (roleId == null) {
+      if (other.roleId != null)
+        return false;
+    } else if (!roleId.equals(other.roleId))
+      return false;
+    return true;
+  }
 
-    public void setRoleId(String roleId) {
-	this.roleId = roleId;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public String getDescription() {
-	return description;
-    }
+  public String getRoleId() {
+    return roleId;
+  }
 
-    public void setDescription(String description) {
-	this.description = description;
-    }
+  public List<UserRole> getUserRoles() {
+    return userRoles;
+  }
 
-    public List<UserRole> getUserRoles() {
-	return userRoles;
-    }
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((description == null) ? 0 : description.hashCode());
+    result = prime * result + ((roleId == null) ? 0 : roleId.hashCode());
+    return result;
+  }
 
-    public void setUserRoles(List<UserRole> userRoles) {
-	this.userRoles = userRoles;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result
-		+ ((description == null) ? 0 : description.hashCode());
-	result = prime * result + ((roleId == null) ? 0 : roleId.hashCode());
-	return result;
-    }
+  public void setRoleId(String roleId) {
+    this.roleId = roleId;
+  }
 
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	Role other = (Role) obj;
-	if (description == null) {
-	    if (other.description != null)
-		return false;
-	} else if (!description.equals(other.description))
-	    return false;
-	if (roleId == null) {
-	    if (other.roleId != null)
-		return false;
-	} else if (!roleId.equals(other.roleId))
-	    return false;
-	return true;
-    }
+  public void setUserRoles(List<UserRole> userRoles) {
+    this.userRoles = userRoles;
+  }
 
-    @Override
-    public String toString() {
-	StringBuilder builder = new StringBuilder();
-	builder.append("Role [roleId=").append(roleId).append(", description=")
-		.append(description).append("]");
-	return builder.toString();
-    }
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Role [roleId=").append(roleId).append(", description=").append(description)
+        .append("]");
+    return builder.toString();
+  }
 
 }

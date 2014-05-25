@@ -11,53 +11,51 @@ import com.brainmaster.apps.invoicing.core.model.credential.Account;
 
 public class CategoryAccountKeys extends AccountKeys implements Serializable {
 
-    private static final long serialVersionUID = 6422484821577173408L;
+  private static final long serialVersionUID = 6422484821577173408L;
 
-    @Column(name = "category_name")
-    private String categoryName;
+  @Column(name = "category_name")
+  private String categoryName;
 
-    @Deprecated
-    public CategoryAccountKeys() {
-    }
+  @Deprecated
+  public CategoryAccountKeys() {}
 
-    public CategoryAccountKeys(Account account, String categoryName) {
-	super(account);
-	this.categoryName = categoryName;
-    }
+  public CategoryAccountKeys(Account account, String categoryName) {
+    super(account);
+    this.categoryName = categoryName;
+  }
 
-    public String getCategoryName() {
-	return categoryName;
-    }
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    CategoryAccountKeys other = (CategoryAccountKeys) obj;
+    return new EqualsBuilder().appendSuper(super.equals(other))
+        .append(categoryName, other.getCategoryName()).isEquals();
+  }
 
-    public void setCategoryName(String categoryName) {
-	this.categoryName = categoryName;
-    }
+  public String getCategoryName() {
+    return categoryName;
+  }
 
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = super.hashCode();
-	result = prime * result
-		+ ((categoryName == null) ? 0 : categoryName.hashCode());
-	return result;
-    }
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = super.hashCode();
+    result = prime * result + ((categoryName == null) ? 0 : categoryName.hashCode());
+    return result;
+  }
 
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	CategoryAccountKeys other = (CategoryAccountKeys) obj;
-	return new EqualsBuilder().appendSuper(super.equals(other))
-		.append(categoryName, other.getCategoryName()).isEquals();
-    }
+  public void setCategoryName(String categoryName) {
+    this.categoryName = categoryName;
+  }
 
-    @Override
-    public String toString() {
-	return ToStringBuilder.reflectionToString(this);
-    }
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this);
+  }
 }
