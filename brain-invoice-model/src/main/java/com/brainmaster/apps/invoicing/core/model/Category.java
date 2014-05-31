@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,6 +24,8 @@ import com.brainmaster.apps.invoicing.core.model.id.CategoryAccountKeys;
 
 @Entity
 @Table(name = "category")
+@NamedQueries({@NamedQuery(name = "categoryFromAccount",
+    query = "from Category a where category.keys.account = :account")})
 public class Category extends AbstractUpdateBy implements Serializable {
 
   private static final long serialVersionUID = -4114451169235211979L;

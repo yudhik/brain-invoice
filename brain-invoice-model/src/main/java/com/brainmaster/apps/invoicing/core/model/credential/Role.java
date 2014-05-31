@@ -1,6 +1,5 @@
 package com.brainmaster.apps.invoicing.core.model.credential;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.picketlink.idm.model.AbstractIdentityType;
+import org.picketlink.idm.model.annotation.AttributeProperty;
+import org.picketlink.idm.model.annotation.Unique;
+
 @Entity
 @Table(name = "role")
-public class Role implements Serializable {
+public class Role extends AbstractIdentityType {
 
   private static final long serialVersionUID = 3440554143752137475L;
 
@@ -25,7 +28,7 @@ public class Role implements Serializable {
   @Column(length = 75, nullable = false)
   private String description;
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "userRoleId.role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<UserRole> userRoles = new ArrayList<UserRole>();
 
   public Role() {}
@@ -61,6 +64,8 @@ public class Role implements Serializable {
     return description;
   }
 
+  @AttributeProperty
+  @Unique
   public String getRoleId() {
     return roleId;
   }

@@ -70,7 +70,7 @@ public class Store extends AbstractUpdateBy implements Serializable {
   @OneToMany(mappedBy = "parentStore", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Store> childStores = new ArrayList<Store>();
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<UserStore> userStores = new ArrayList<UserStore>();
 
   @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -67,9 +67,11 @@ public class IntegrationModelTest extends Arquillian {
     WebArchive war =
         ShrinkWrap
             .create(WebArchive.class, "IntegrationModelTest.war")
-            .addPackages(true, "com.brainmaster.apps.invoicing.model",
-                "com.brainmaster.util.formatter", "com.brainmaster.util.helper.uuid",
-                "com.brainmaster.util.types").addClasses(IntegrationModelRepositoryBean.class)
+            .addPackages(true, "com.brainmaster.apps", "com.brainmaster.util.formatter",
+                "com.brainmaster.util.helper.uuid", "com.brainmaster.util.types",
+                "org.picketlink.idm.model", "org.picketlink.idm.query",
+                "org.picketlink.idm.IdentityManagementException")
+            .addClasses(IntegrationModelRepositoryBean.class)
             .addAsResource("META-INF/persistence-test.xml", "META-INF/persistence.xml")
             // .addAsManifestResource("test-ds.xml", "test-ds.xml")
             // .addAsResource("META-INF/jboss-deployment-structure.xml",
@@ -86,29 +88,12 @@ public class IntegrationModelTest extends Arquillian {
     return war;
   }
 
-  @Test
-  public void testIntegrationRepositoryBeanInjection() {
-    Assert.assertNotNull(repositoryBean, "ejb is null");
-    log.info("successsfully injecting ejb");
-  }
-
   @Test(dependsOnMethods = "testIntegrationRepositoryBeanInjection")
   public void testCreatingAccount() {
     Account account = new Account(ACCOUNT_UUID, EMAIL_ID, "ucup", "sanusi");
     repositoryBean.save(account);
     Assert.assertNotNull(account.getAccountId(), "account is null");
     log.info(account.toString());
-  }
-
-  @Test(dependsOnMethods = {"testCreatingAccount"})
-  public void testCreatingUserFromAccount() {
-    Account account = repositoryBean.getAccountFromKey(ACCOUNT_UUID);
-    account =
-        repositoryBean.addUserFromAccount(ACCOUNT_UUID, new User(USER_ACCOUNT_ID, "ucup.sanusi",
-            EMAIL_ACCOUNT_ID, ArrayUtils.toObject(DigestUtils.md5Hex("simplePassword").getBytes()),
-            "ucup", "sanusi", account));
-    Assert.assertEquals(account.getUsers().size(), 1);
-
   }
 
   @Test(dependsOnMethods = {"testCreatingUserFromAccount"})
@@ -196,6 +181,27 @@ public class IntegrationModelTest extends Arquillian {
             .size(), 2);
   }
 
+  @Test(dependsOnMethods = {"testCreatingUserFromStore"})
+  public void testCreatingProductForStore() {
+    User user = repositoryBean.getUser(EMAIL_ID, false);
+    Store store = repositoryBean.getStoreFromKey(STORE_ID, false, false);
+    List<Product> products = new ArrayList<Product>();
+    products.add(repositoryBean.getProductFromCode(store.getAccount(), PRODUCT_CODE1));
+    products.add(repositoryBean.getProductFromCode(store.getAccount(), PRODUCT_CODE2));
+    store = repositoryBean.createProductForStore(store, products, user);
+    Assert.assertEquals(store.getProducts().size(), 2);
+  }
+
+  @Test(dependsOnMethods = {"testCreatingStore"})
+  public void testCreatingRole() {
+    Role anonymousRole = repositoryBean.save(new Role(ANONYMOUS_ROLE, "unknown user"));
+    Assert.assertNotNull(repositoryBean.getRoleFromKey(anonymousRole.getRoleId()),
+        "anonymous role is not save");
+    Role userRole = repositoryBean.save(new Role(USER_ROLE, "defined user"));
+    Assert.assertNotNull(repositoryBean.getRoleFromKey(userRole.getRoleId()),
+        "user role is not save");
+  }
+
   @Test(dependsOnMethods = {"testCreatingProduct"})
   public void testCreatingStore() {
     User user = repositoryBean.getUser(EMAIL_ACCOUNT_ID, true);
@@ -220,17 +226,18 @@ public class IntegrationModelTest extends Arquillian {
     log.info("#store id : {}", new Object[] {STORE_ID});
   }
 
-  @Test(dependsOnMethods = {"testCreatingStore"})
-  public void testCreatingRole() {
-    Role anonymousRole = repositoryBean.save(new Role(ANONYMOUS_ROLE, "unknown user"));
-    Assert.assertNotNull(repositoryBean.getRoleFromKey(anonymousRole.getRoleId()),
-        "anonymous role is not save");
-    Role userRole = repositoryBean.save(new Role(USER_ROLE, "defined user"));
-    Assert.assertNotNull(repositoryBean.getRoleFromKey(userRole.getRoleId()),
-        "user role is not save");
+  @Test(dependsOnMethods = {"testCreatingAccount"})
+  public void testCreatingUserFromAccount() {
+    Account account = repositoryBean.getAccountFromKey(ACCOUNT_UUID);
+    account =
+        repositoryBean.addUserFromAccount(ACCOUNT_UUID, new User(USER_ACCOUNT_ID, "ucup.sanusi",
+            EMAIL_ACCOUNT_ID, ArrayUtils.toObject(DigestUtils.md5Hex("simplePassword").getBytes()),
+            "ucup", "sanusi", account));
+    Assert.assertEquals(account.getUsers().size(), 1);
+
   }
 
-  @Test(dependsOnMethods = {"testCreatingRole"})
+  @Test(dependsOnMethods = {"testCreatingAccount", "testCreatingRole"})
   public void testCreatingUserFromStore() {
     log.info("store id : {}", new Object[] {STORE_ID});
     Account account = repositoryBean.getAccountFromKey(ACCOUNT_UUID);
@@ -238,6 +245,7 @@ public class IntegrationModelTest extends Arquillian {
         new User(USER_ID, "ucup.sanusis", EMAIL_ID, ArrayUtils.toObject(DigestUtils.md5Hex(
             "simplePassword").getBytes()), "ucup", "sanusis", account);
     account = repositoryBean.addUserFromAccount(ACCOUNT_UUID, user);
+    Assert.assertEquals(account.getUsers().size(), 2);
     Store store = repositoryBean.addUserFromStore(STORE_ID, user);
     Assert.assertEquals(store.getUserStores().size(), 1);
   }
@@ -254,14 +262,9 @@ public class IntegrationModelTest extends Arquillian {
     Assert.assertEquals(user.getUserRoles().size(), 2);
   }
 
-  @Test(dependsOnMethods = {"testCreatingUserFromStore"})
-  public void testCreatingProductForStore() {
-    User user = repositoryBean.getUser(EMAIL_ID, false);
-    Store store = repositoryBean.getStoreFromKey(STORE_ID, false, false);
-    List<Product> products = new ArrayList<Product>();
-    products.add(repositoryBean.getProductFromCode(store.getAccount(), PRODUCT_CODE1));
-    products.add(repositoryBean.getProductFromCode(store.getAccount(), PRODUCT_CODE2));
-    store = repositoryBean.createProductForStore(store, products, user);
-    Assert.assertEquals(store.getProducts().size(), 2);
+  @Test
+  public void testIntegrationRepositoryBeanInjection() {
+    Assert.assertNotNull(repositoryBean, "ejb is null");
+    log.info("successsfully injecting ejb");
   }
 }

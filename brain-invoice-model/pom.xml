@@ -1,120 +1,139 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.brainmaster.apps</groupId>
-		<artifactId>brain-invoice</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-	</parent>
-	<artifactId>brain-invoice-model</artifactId>
-	<name>brain-invoce-model</name>
-	<description>a set of entity used by application</description>
-	<dependencies>
-		<dependency>
-			<groupId>com.brainmaster.util</groupId>
-			<artifactId>brain-util</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>20041127.091804</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- Import the JPA API, we use provided scope as the API is included in 
-			JBoss AS 7 -->
-		<dependency>
-			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- JSR-303 (Bean Validation) Implementation -->
-		<!-- Provides portable constraints such as @Email -->
-		<!-- Hibernate Validator is shipped in JBoss AS 7 -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- Annotation processor that raising compilation errors whenever constraint 
-			annotations are incorrectly used. -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator-annotation-processor</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.5</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.arquillian.testng</groupId>
-			<artifactId>arquillian-testng-container</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.arquillian.protocol</groupId>
-			<artifactId>arquillian-protocol-servlet</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.spec</groupId>
-			<artifactId>jboss-javaee-6.0</artifactId>
-			<version>3.0.2.Final</version>
-			<scope>test</scope>
-			<type>pom</type>
-		</dependency>
-
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito</artifactId>
-			<version>1.5</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.shrinkwrap.resolver</groupId>
-			<artifactId>shrinkwrap-resolver-bom</artifactId>
-			<scope>test</scope>
-			<type>pom</type>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.shrinkwrap.resolver</groupId>
-			<artifactId>shrinkwrap-resolver-depchain</artifactId>
-			<type>pom</type>
-		</dependency>
-
-	</dependencies>
-
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.brainmaster.apps</groupId>
+    <artifactId>brain-invoice</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>brain-invoice-model</artifactId>
+  <name>brain-invoce-model</name>
+  <description>a set of entity used by application</description>
+  <dependencies>
+    <dependency>
+      <groupId>com.brainmaster.util</groupId>
+      <artifactId>brain-util</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>20041127.091804</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <!-- Import the JPA API, we use provided scope as the API is included in JBoss AS 7 -->
+    <dependency>
+      <groupId>org.hibernate.javax.persistence</groupId>
+      <artifactId>hibernate-jpa-2.0-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <!-- JSR-303 (Bean Validation) Implementation -->
+    <!-- Provides portable constraints such as @Email -->
+    <!-- Hibernate Validator is shipped in JBoss AS 7 -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <!-- Annotation processor that raising compilation errors whenever constraint annotations are incorrectly used. -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator-annotation-processor</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.7.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.testng</groupId>
+      <artifactId>arquillian-testng-container</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.protocol</groupId>
+      <artifactId>arquillian-protocol-servlet</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec</groupId>
+      <artifactId>jboss-javaee-6.0</artifactId>
+      <version>3.0.2.Final</version>
+      <scope>test</scope>
+      <type>pom</type>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <version>1.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap.resolver</groupId>
+      <artifactId>shrinkwrap-resolver-bom</artifactId>
+      <scope>test</scope>
+      <type>pom</type>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap.resolver</groupId>
+      <artifactId>shrinkwrap-resolver-depchain</artifactId>
+      <type>pom</type>
+    </dependency>
+    <!-- Import the PicketLink API, we deploy this as library with the application, and can compile against it -->
+    <dependency>
+      <groupId>org.picketlink</groupId>
+      <artifactId>picketlink-api</artifactId>
+      <version>2.5.2.Final</version>
+    </dependency>
+    <!-- Import the PicketLink implementation, we deploy this as library with the application, but can't compile against 
+      it -->
+    <dependency>
+      <groupId>org.picketlink</groupId>
+      <artifactId>picketlink-impl</artifactId>
+      <version>2.5.2.Final</version>
+    </dependency>
+    <!-- Import the PicketLink IDM API, we deploy this as library with the application, and can compile against it -->
+    <dependency>
+      <groupId>org.picketlink</groupId>
+      <artifactId>picketlink-idm-api</artifactId>
+      <version>2.5.2.Final</version>
+    </dependency>
+    <!-- Import the PicketLink IDM API, we deploy this as library with the application, and can compile against it -->
+    <dependency>
+      <groupId>org.picketlink</groupId>
+      <artifactId>picketlink-idm-impl</artifactId>
+      <version>2.5.2.Final</version>
+    </dependency>
+    <!-- Import the PicketLink IDM Simple Schema, which provides some built-in JPA entities for the sample model -->
+    <dependency>
+      <groupId>org.picketlink</groupId>
+      <artifactId>picketlink-idm-simple-schema</artifactId>
+      <version>2.5.2.Final</version>
+    </dependency>
+  </dependencies>
 </project>

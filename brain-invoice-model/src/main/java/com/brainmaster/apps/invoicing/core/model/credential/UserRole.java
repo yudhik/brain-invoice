@@ -1,7 +1,5 @@
 package com.brainmaster.apps.invoicing.core.model.credential;
 
-import java.io.Serializable;
-
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
 import javax.persistence.EmbeddedId;
@@ -9,24 +7,30 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
+import org.picketlink.idm.model.AbstractAttributedType;
+import org.picketlink.idm.model.Relationship;
+
 import com.brainmaster.apps.invoicing.core.model.id.UserRoleKeys;
 
 @Entity
 @AssociationOverrides({
-    @AssociationOverride(name = "id.user", joinColumns = @JoinColumn(name = "user_id")),
-    @AssociationOverride(name = "id.role", joinColumns = @JoinColumn(name = "role_id"))})
+    @AssociationOverride(name = "userRoleId.user", joinColumns = @JoinColumn(name = "user_id")),
+    @AssociationOverride(name = "userRoleId.role", joinColumns = @JoinColumn(name = "role_id"))})
 @Table(name = "userrole")
-public class UserRole implements Serializable {
+public class UserRole extends AbstractAttributedType implements Relationship {
 
   private static final long serialVersionUID = 959920300849148232L;
 
   @EmbeddedId
-  private UserRoleKeys id;
+  private UserRoleKeys userRoleId;
+
+  // private IdentityType assignee;
+  // private Role role;
 
   public UserRole() {}
 
   public UserRole(UserRoleKeys id) {
-    this.id = id;
+    this.userRoleId = id;
   }
 
   @Override
@@ -38,34 +42,50 @@ public class UserRole implements Serializable {
     if (getClass() != obj.getClass())
       return false;
     UserRole other = (UserRole) obj;
-    if (id == null) {
-      if (other.id != null)
+    if (userRoleId == null) {
+      if (other.userRoleId != null)
         return false;
-    } else if (!id.equals(other.id))
+    } else if (!userRoleId.equals(other.userRoleId))
       return false;
     return true;
   }
 
-  public UserRoleKeys getId() {
-    return id;
+  // public IdentityType getAssignee() {
+  // return assignee;
+  // }
+  //
+  // public Role getRole() {
+  // return role;
+  // }
+
+  public UserRoleKeys getUserRoleId() {
+    return userRoleId;
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
+    result = prime * result + ((userRoleId == null) ? 0 : userRoleId.hashCode());
     return result;
   }
 
-  public void setId(UserRoleKeys id) {
-    this.id = id;
+  // public void setAssignee(IdentityType assignee) {
+  // this.assignee = assignee;
+  // }
+  //
+  // public void setRole(Role role) {
+  // this.role = role;
+  // }
+
+  public void setUserRoleId(UserRoleKeys userRoleId) {
+    this.userRoleId = userRoleId;
   }
 
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("UserRole [id=").append(id).append("]");
+    builder.append("UserRole [id=").append(userRoleId).append("]");
     return builder.toString();
   }
 

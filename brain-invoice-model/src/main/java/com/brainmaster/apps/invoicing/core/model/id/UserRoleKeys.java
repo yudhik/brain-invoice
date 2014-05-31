@@ -15,11 +15,11 @@ public class UserRoleKeys implements Serializable {
   private static final long serialVersionUID = 5936871522488890719L;
 
   @ManyToOne(targetEntity = User.class)
-  @JoinColumn(name = "user", columnDefinition = "user_id")
+  @JoinColumn(name = "user_id")
   private User user;
 
   @ManyToOne(targetEntity = Role.class)
-  @JoinColumn(name = "role", columnDefinition = "role_id")
+  @JoinColumn(name = "role_id")
   private Role role;
 
   public UserRoleKeys() {}

@@ -1,6 +1,5 @@
 package com.brainmaster.apps.invoicing.core.model.credential;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +20,9 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.picketlink.idm.model.AbstractIdentityType;
+import org.picketlink.idm.model.annotation.AttributeProperty;
+import org.picketlink.idm.model.annotation.Unique;
 
 import com.brainmaster.apps.invoicing.core.model.Brand;
 import com.brainmaster.apps.invoicing.core.model.Category;
@@ -35,7 +37,7 @@ import com.brainmaster.util.types.UUIDType;
 @TypeDefs({@TypeDef(name = "uuid", typeClass = UUIDType.class)})
 @Table(name = "account")
 @NamedQuery(name = "all-account", query = "from Account")
-public class Account implements Serializable {
+public class Account extends AbstractIdentityType {
 
   private static final long serialVersionUID = 5856204102955357752L;
 
@@ -51,9 +53,11 @@ public class Account implements Serializable {
 
   @NotBlank
   @Column(name = "registration_first_name", length = DatabaseColumnConstant.SIZE_FIRSTNAME)
+  @AttributeProperty
   private String resitrationFirstName;
 
   @Column(name = "registration_last_name", length = DatabaseColumnConstant.SIZE_LASTNAME)
+  @AttributeProperty
   private String registrationLastName;
 
   @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -71,7 +75,7 @@ public class Account implements Serializable {
   @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Store> stores = new ArrayList<Store>();
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<User> users = new ArrayList<User>();
 
   public Account() {}
@@ -115,6 +119,12 @@ public class Account implements Serializable {
   @Transient
   public String getAccountId() {
     return UUIDHelper.uuidToString(accountUuid);
+  }
+
+  @AttributeProperty
+  @Unique
+  public String getAccountName() {
+    return getResitrationFirstName() + " " + getRegistrationLastName();
   }
 
   public UUID getAccountUuid() {
@@ -196,10 +206,6 @@ public class Account implements Serializable {
     this.products = products;
   }
 
-  public void setRegistrationEmailAddress(String registrationEmailAddress) {
-    this.registrationEmailAddress = registrationEmailAddress;
-  }
-
   // public List<User> getUsers() {
   // return users;
   // }
@@ -207,6 +213,10 @@ public class Account implements Serializable {
   // public void setUsers(List<User> users) {
   // this.users = users;
   // }
+
+  public void setRegistrationEmailAddress(String registrationEmailAddress) {
+    this.registrationEmailAddress = registrationEmailAddress;
+  }
 
   public void setRegistrationLastName(String registrationLastName) {
     this.registrationLastName = registrationLastName;

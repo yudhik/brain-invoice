@@ -1,6 +1,5 @@
 package com.brainmaster.apps.invoicing.core.model.credential;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +22,9 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.picketlink.idm.model.AbstractIdentityType;
+import org.picketlink.idm.model.annotation.AttributeProperty;
+import org.picketlink.idm.model.annotation.Unique;
 
 import com.brainmaster.apps.invoicing.core.model.UserStore;
 import com.brainmaster.util.DatabaseColumnConstant;
@@ -32,7 +34,7 @@ import com.brainmaster.util.DatabaseColumnConstant;
     "account_id"}))
 @NamedQueries({@NamedQuery(name = "user-with-email",
     query = "from User a where a.emailAddress = :email")})
-public class User implements Serializable {
+public class User extends AbstractIdentityType implements org.picketlink.idm.model.Account {
 
   private static final long serialVersionUID = 6862888645550391162L;
 
@@ -43,11 +45,15 @@ public class User implements Serializable {
 
   @NotNull
   @Column(name = "username", unique = true)
+  @AttributeProperty
+  @Unique
   private String username;
 
   @NotNull
   @Email
   @Column(name = "email_address", unique = true)
+  @Unique
+  @AttributeProperty
   private String emailAddress;
 
   @NotNull
@@ -56,15 +62,17 @@ public class User implements Serializable {
 
   @NotBlank
   @Column(name = "first_name", length = DatabaseColumnConstant.SIZE_FIRSTNAME)
+  @AttributeProperty
   private String firstName;
 
   @Column(name = "last_name", length = DatabaseColumnConstant.SIZE_LASTNAME)
+  @AttributeProperty
   private String lastName;
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<UserStore> userStores = new ArrayList<UserStore>();
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "userRoleId.user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<UserRole> userRoles = new ArrayList<UserRole>();
 
   @ManyToOne

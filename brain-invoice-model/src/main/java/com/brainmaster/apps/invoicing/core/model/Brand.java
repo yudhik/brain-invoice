@@ -8,6 +8,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -19,6 +21,8 @@ import com.brainmaster.apps.invoicing.core.model.id.BrandAccountKeys;
 
 @Entity
 @Table(name = "brand")
+@NamedQueries({@NamedQuery(name = "brandFromAccount",
+    query = "from Brand a where a.keys.account = :account")})
 public class Brand extends AbstractUpdateBy implements Serializable {
 
   private static final long serialVersionUID = -1603771716730111235L;
