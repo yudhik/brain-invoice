@@ -27,9 +27,11 @@ public class CategoryServiceBean extends AbstractServiceBean {
     } else {
       throw new EntityNotFoundException("can not delete unsaved brand : " + category);
     }
+    getEntityManager().flush();
   }
 
   public List<Category> getAllCategoryFromAccount(Account account) {
+    log.debug("get all category from account : {}", account);
     return getAllCategoryFromAccount(account, null, null);
   }
 
@@ -57,8 +59,9 @@ public class CategoryServiceBean extends AbstractServiceBean {
     if (savedCategory != null) {
       BeanUtils.copyProperties(savedCategory, category);
       category = getEntityManager().merge(savedCategory);
+    } else {
+      getEntityManager().persist(category);
     }
-    getEntityManager().persist(category);
     getEntityManager().flush();
     return category;
   }
