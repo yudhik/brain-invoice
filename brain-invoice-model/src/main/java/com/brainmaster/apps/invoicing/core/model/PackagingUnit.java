@@ -3,8 +3,11 @@ package com.brainmaster.apps.invoicing.core.model;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.brainmaster.apps.invoicing.core.model.credential.Account;
@@ -13,12 +16,19 @@ import com.brainmaster.apps.invoicing.core.model.id.PackagingAccountKeys;
 
 @Entity
 @Table(name = "packaging")
+@IdClass(PackagingAccountKeys.class)
 public class PackagingUnit extends AbstractUpdateBy implements Serializable {
 
   private static final long serialVersionUID = 1297099907148015361L;
 
-  @EmbeddedId
-  private PackagingAccountKeys keys;
+  @Id
+  @ManyToOne
+  @JoinColumn(name = "account_id")
+  private Account account;
+
+  @Id
+  @Column(name = "packaging_id")
+  private String packagingId;
 
   @Column(name = "packaging_name")
   private String packagingName;
@@ -31,36 +41,48 @@ public class PackagingUnit extends AbstractUpdateBy implements Serializable {
   public PackagingUnit(Account account, String packagingId, String packagingName, User createdBy,
       User updatedBy) {
     super(createdBy, updatedBy);
-    this.keys = new PackagingAccountKeys(account, packagingId);
+    this.account = account;
+    this.packagingId = packagingId;
     this.packagingName = packagingName;
   }
 
   public PackagingUnit(PackagingAccountKeys keys, String packagingName, User createdBy,
       User updatedBy) {
     super(createdBy, updatedBy);
-    this.keys = keys;
+    this.account = keys.getAccount();
+    this.packagingId = keys.getPackagingId();
     this.packagingName = packagingName;
   }
+
 
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
       return true;
-    if (obj == null)
+    if (!super.equals(obj))
       return false;
     if (getClass() != obj.getClass())
       return false;
     PackagingUnit other = (PackagingUnit) obj;
-    if (keys == null) {
-      if (other.keys != null)
+    if (account == null) {
+      if (other.account != null)
         return false;
-    } else if (!keys.equals(other.keys))
+    } else if (!account.equals(other.account))
+      return false;
+    if (packagingId == null) {
+      if (other.packagingId != null)
+        return false;
+    } else if (!packagingId.equals(other.packagingId))
       return false;
     return true;
   }
 
-  public PackagingAccountKeys getKeys() {
-    return keys;
+  public Account getAccount() {
+    return account;
+  }
+
+  public String getPackagingId() {
+    return packagingId;
   }
 
   public String getPackagingName() {
@@ -70,13 +92,18 @@ public class PackagingUnit extends AbstractUpdateBy implements Serializable {
   @Override
   public int hashCode() {
     final int prime = 31;
-    int result = 1;
-    result = prime * result + ((keys == null) ? 0 : keys.hashCode());
+    int result = super.hashCode();
+    result = prime * result + ((account == null) ? 0 : account.hashCode());
+    result = prime * result + ((packagingId == null) ? 0 : packagingId.hashCode());
     return result;
   }
 
-  public void setKeys(PackagingAccountKeys keys) {
-    this.keys = keys;
+  public void setAccount(Account account) {
+    this.account = account;
+  }
+
+  public void setPackagingId(String packagingId) {
+    this.packagingId = packagingId;
   }
 
   public void setPackagingName(String packagingName) {
@@ -85,7 +112,24 @@ public class PackagingUnit extends AbstractUpdateBy implements Serializable {
 
   @Override
   public String toString() {
-    return "Packaging [keys=" + keys + ", packagingName=" + packagingName + "]";
+    StringBuilder builder = new StringBuilder();
+    builder.append("PackagingUnit [");
+    if (account != null) {
+      builder.append("account=");
+      builder.append(account);
+      builder.append(", ");
+    }
+    if (packagingId != null) {
+      builder.append("packagingId=");
+      builder.append(packagingId);
+      builder.append(", ");
+    }
+    if (packagingName != null) {
+      builder.append("packagingName=");
+      builder.append(packagingName);
+    }
+    builder.append("]");
+    return builder.toString();
   }
 
 }

@@ -21,7 +21,9 @@ public class CategoryServiceBean extends AbstractServiceBean {
 
   public void delete(Category category) throws Exception {
     log.debug("deleting category : {}", category);
-    Category savedCategory = getEntityManager().find(Category.class, category.getKeys());
+    Category savedCategory =
+        getEntityManager().find(Category.class,
+            new CategoryAccountKeys(category.getAccount(), category.getCategoryName()));
     if (savedCategory != null) {
       getEntityManager().remove(savedCategory);
     } else {
@@ -55,7 +57,9 @@ public class CategoryServiceBean extends AbstractServiceBean {
 
   public Category save(Category category) throws Exception {
     log.debug("save category : {}", category);
-    Category savedCategory = getCategoryFromKey(category.getKeys());
+    Category savedCategory =
+        getCategoryFromKey(new CategoryAccountKeys(category.getAccount(),
+            category.getCategoryName()));
     if (savedCategory != null) {
       BeanUtils.copyProperties(savedCategory, category);
       category = getEntityManager().merge(savedCategory);

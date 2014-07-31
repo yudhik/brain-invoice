@@ -1,8 +1,5 @@
 package com.brainmaster.apps.invoicing.core.model.id;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -10,11 +7,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import com.brainmaster.apps.invoicing.core.model.credential.Account;
 
 @Embeddable
-public class BrandAccountKeys extends AccountKeys implements Serializable {
+public class BrandAccountKeys extends AccountKeys {
 
   private static final long serialVersionUID = -5852654524371945799L;
 
-  @Column(name = "brand_name")
   private String brandName;
 
   @Deprecated
@@ -42,9 +38,6 @@ public class BrandAccountKeys extends AccountKeys implements Serializable {
     return brandName;
   }
 
-  // TODO: implement hashcode, equals and toString into a proper
-  // implementation
-
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -60,8 +53,14 @@ public class BrandAccountKeys extends AccountKeys implements Serializable {
 
   @Override
   public String toString() {
-    return "BrandAccountKeys [account=" + getAccount().getAccountId() + ", brandName=" + brandName
-        + "]";
+    StringBuilder builder = new StringBuilder();
+    builder.append("BrandAccountKeys [");
+    if (brandName != null) {
+      builder.append("brandName=");
+      builder.append(brandName);
+    }
+    builder.append("]");
+    return builder.toString();
   }
 
 }

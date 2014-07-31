@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -28,6 +29,7 @@ public class ProductStoreCalculationLog extends AbstractCreateByEntity implement
   private UUID calculationLogId;
 
   @ManyToOne(targetEntity = ProductStoreTransaction.class)
+  @JoinColumn(name = "transaction_id")
   private ProductStoreTransaction latestProductStoreTransaction;
 
   @Temporal(TemporalType.TIMESTAMP)
@@ -42,6 +44,11 @@ public class ProductStoreCalculationLog extends AbstractCreateByEntity implement
 
   @Column
   private Long result;
+
+  @Deprecated
+  public ProductStoreCalculationLog() {
+    super(null);
+  }
 
   public ProductStoreCalculationLog(
       User createdBy,

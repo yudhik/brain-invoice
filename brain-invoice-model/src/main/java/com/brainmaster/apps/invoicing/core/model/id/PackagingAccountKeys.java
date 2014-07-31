@@ -2,7 +2,6 @@ package com.brainmaster.apps.invoicing.core.model.id;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -15,8 +14,6 @@ public class PackagingAccountKeys extends AccountKeys implements Serializable {
 
   private static final long serialVersionUID = 5616285605407339616L;
 
-  // @Type(type = "uuid")
-  @Column(name = "packaging_id")
   private String packagingId;
 
   @Deprecated

@@ -1,10 +1,10 @@
 package com.brainmaster.apps.invoicing.core.model.credential;
 
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.picketlink.idm.model.AbstractAttributedType;
@@ -13,80 +13,93 @@ import org.picketlink.idm.model.Relationship;
 import com.brainmaster.apps.invoicing.core.model.id.UserRoleKeys;
 
 @Entity
-@AssociationOverrides({
-    @AssociationOverride(name = "userRoleId.user", joinColumns = @JoinColumn(name = "user_id")),
-    @AssociationOverride(name = "userRoleId.role", joinColumns = @JoinColumn(name = "role_id"))})
-@Table(name = "userrole")
+@IdClass(UserRoleKeys.class)
+@Table(name = "user_role")
 public class UserRole extends AbstractAttributedType implements Relationship {
 
   private static final long serialVersionUID = 959920300849148232L;
 
-  @EmbeddedId
-  private UserRoleKeys userRoleId;
+  @Id
+  @ManyToOne(targetEntity = User.class)
+  @JoinColumn(name = "user_id")
+  private User user;
 
-  // private IdentityType assignee;
-  // private Role role;
+  @Id
+  @ManyToOne(targetEntity = Role.class)
+  @JoinColumn(name = "role_id")
+  private Role role;
 
   public UserRole() {}
 
-  public UserRole(UserRoleKeys id) {
-    this.userRoleId = id;
+  public UserRole(User user, Role role) {
+    this.user = user;
+    this.role = role;
   }
 
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
       return true;
-    if (obj == null)
+    if (!super.equals(obj))
       return false;
     if (getClass() != obj.getClass())
       return false;
     UserRole other = (UserRole) obj;
-    if (userRoleId == null) {
-      if (other.userRoleId != null)
+    if (role == null) {
+      if (other.role != null)
         return false;
-    } else if (!userRoleId.equals(other.userRoleId))
+    } else if (!role.equals(other.role))
+      return false;
+    if (user == null) {
+      if (other.user != null)
+        return false;
+    } else if (!user.equals(other.user))
       return false;
     return true;
   }
 
-  // public IdentityType getAssignee() {
-  // return assignee;
-  // }
-  //
-  // public Role getRole() {
-  // return role;
-  // }
+  public Role getRole() {
+    return role;
+  }
 
-  public UserRoleKeys getUserRoleId() {
-    return userRoleId;
+  public User getUser() {
+    return user;
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
-    int result = 1;
-    result = prime * result + ((userRoleId == null) ? 0 : userRoleId.hashCode());
+    int result = super.hashCode();
+    result = prime * result + ((role == null) ? 0 : role.hashCode());
+    result = prime * result + ((user == null) ? 0 : user.hashCode());
     return result;
   }
 
-  // public void setAssignee(IdentityType assignee) {
-  // this.assignee = assignee;
-  // }
-  //
-  // public void setRole(Role role) {
-  // this.role = role;
-  // }
+  public void setRole(Role role) {
+    this.role = role;
+  }
 
-  public void setUserRoleId(UserRoleKeys userRoleId) {
-    this.userRoleId = userRoleId;
+  public void setUser(User user) {
+    this.user = user;
   }
 
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("UserRole [id=").append(userRoleId).append("]");
+    builder.append("UserRole [");
+    if (user != null) {
+      builder.append("user=");
+      builder.append(user);
+      builder.append(", ");
+    }
+    if (role != null) {
+      builder.append("role=");
+      builder.append(role);
+    }
+    builder.append("]");
     return builder.toString();
   }
+
+
 
 }

@@ -6,20 +6,23 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.PrimaryKeyJoinColumns;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Type;
 
 import com.brainmaster.apps.invoicing.core.model.credential.Account;
 import com.brainmaster.apps.invoicing.core.model.credential.User;
+import com.brainmaster.apps.invoicing.core.model.id.ProductStoreAccountKeys;
 import com.brainmaster.util.DatabaseColumnConstant;
 
 @Entity
-@Table(name = "product_store", uniqueConstraints = @UniqueConstraint(columnNames = {"account_id",
-    "product_id", "store_id"}))
+@IdClass(ProductStoreAccountKeys.class)
+@Table(name = "product_store")
 public class ProductStore extends AbstractCreateByEntity implements Serializable {
 
   private static final long serialVersionUID = -7826385577001790718L;
@@ -29,14 +32,19 @@ public class ProductStore extends AbstractCreateByEntity implements Serializable
   @Column(name = "product_store_id", length = DatabaseColumnConstant.SIZE_UUID)
   private UUID productStoreId;
 
+  @Id
   @ManyToOne(targetEntity = Account.class)
   @JoinColumn(name = "account_id")
   private Account account;
 
+  @Id
   @ManyToOne(targetEntity = Product.class)
-  @JoinColumn(name = "product_id")
+  @PrimaryKeyJoinColumns({
+      @PrimaryKeyJoinColumn(name = "product_code", referencedColumnName = "product_code"),
+      @PrimaryKeyJoinColumn(name = "account_id", referencedColumnName = "account_id")})
   private Product product;
 
+  @Id
   @ManyToOne(targetEntity = Store.class)
   @JoinColumn(name = "store_id")
   private Store store;

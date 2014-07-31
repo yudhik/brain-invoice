@@ -16,7 +16,6 @@ import com.brainmaster.apps.invoicing.core.model.UserStore;
 import com.brainmaster.apps.invoicing.core.model.credential.Role;
 import com.brainmaster.apps.invoicing.core.model.credential.User;
 import com.brainmaster.apps.invoicing.core.model.credential.UserRole;
-import com.brainmaster.apps.invoicing.core.model.id.UserRoleKeys;
 
 @Stateless
 public class UserServiceBean extends AbstractServiceBean {
@@ -40,7 +39,7 @@ public class UserServiceBean extends AbstractServiceBean {
     log.debug("create user with roles, user : {}, roles : {}", new Object[] {user, roles});
     for (Role role : roles) {
       user = getUser(user.getEmailAddress(), false);
-      user.getUserRoles().add(new UserRole(new UserRoleKeys(user, role)));
+      user.getUserRoles().add(new UserRole(user, role));
     }
     user = save(user);
     Hibernate.initialize(user.getUserRoles());

@@ -23,7 +23,8 @@ public class PackagingServiceBean extends AbstractServiceBean {
   public void delete(PackagingUnit packagingUnit) throws Exception {
     log.debug("deleting packaging unit : {}", packagingUnit);
     PackagingUnit savedPackagingUnit =
-        getEntityManager().find(PackagingUnit.class, packagingUnit.getKeys());
+        getEntityManager().find(PackagingUnit.class,
+            new PackagingAccountKeys(packagingUnit.getAccount(), packagingUnit.getPackagingId()));
     if (savedPackagingUnit != null) {
       getEntityManager().remove(savedPackagingUnit);
     } else {
@@ -44,7 +45,9 @@ public class PackagingServiceBean extends AbstractServiceBean {
   }
 
   public PackagingUnit save(PackagingUnit packaging) throws Exception {
-    PackagingUnit savedPackagingUnit = getPackagingFromKey(packaging.getKeys());
+    PackagingUnit savedPackagingUnit =
+        getPackagingFromKey(new PackagingAccountKeys(packaging.getAccount(),
+            packaging.getPackagingId()));
     if (savedPackagingUnit != null) {
       BeanUtils.copyProperties(savedPackagingUnit, packaging);
       packaging = getEntityManager().merge(savedPackagingUnit);

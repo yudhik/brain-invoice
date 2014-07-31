@@ -44,6 +44,11 @@ public class InvoiceTransactionDetail extends AbstractCreateByEntity implements 
   @JoinColumn(name = "invoice_id")
   private InvoiceTransaction invoiceTransaction;
 
+  @Deprecated
+  public InvoiceTransactionDetail() {
+    super(null);
+  }
+
   public InvoiceTransactionDetail(User createdBy) {
     super(createdBy);
   }

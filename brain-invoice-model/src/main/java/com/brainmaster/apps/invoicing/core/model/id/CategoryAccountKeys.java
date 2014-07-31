@@ -1,8 +1,5 @@
 package com.brainmaster.apps.invoicing.core.model.id;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -11,11 +8,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.brainmaster.apps.invoicing.core.model.credential.Account;
 
 @Embeddable
-public class CategoryAccountKeys extends AccountKeys implements Serializable {
+public class CategoryAccountKeys extends AccountKeys {
 
   private static final long serialVersionUID = 6422484821577173408L;
 
-  @Column(name = "category_name")
   private String categoryName;
 
   @Deprecated

@@ -27,7 +27,6 @@ import com.brainmaster.apps.invoicing.core.model.credential.UserRole;
 import com.brainmaster.apps.invoicing.core.model.id.BrandAccountKeys;
 import com.brainmaster.apps.invoicing.core.model.id.CategoryAccountKeys;
 import com.brainmaster.apps.invoicing.core.model.id.PackagingAccountKeys;
-import com.brainmaster.apps.invoicing.core.model.id.UserRoleKeys;
 
 @Stateless
 public class IntegrationModelRepositoryBean {
@@ -69,7 +68,7 @@ public class IntegrationModelRepositoryBean {
   public User createUserWithRoles(User user, List<Role> roles) {
     for (Role role : roles) {
       user = getUser(user.getEmailAddress(), false);
-      user.getUserRoles().add(new UserRole(new UserRoleKeys(user, role)));
+      user.getUserRoles().add(new UserRole(user, role));
     }
     user = save(user);
     Hibernate.initialize(user.getUserRoles());

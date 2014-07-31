@@ -3,8 +3,6 @@ package com.brainmaster.apps.invoicing.core.model.id;
 import java.io.Serializable;
 
 import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 import com.brainmaster.apps.invoicing.core.model.credential.Role;
 import com.brainmaster.apps.invoicing.core.model.credential.User;
@@ -14,12 +12,8 @@ public class UserRoleKeys implements Serializable {
 
   private static final long serialVersionUID = 5936871522488890719L;
 
-  @ManyToOne(targetEntity = User.class)
-  @JoinColumn(name = "user_id")
   private User user;
 
-  @ManyToOne(targetEntity = Role.class)
-  @JoinColumn(name = "role_id")
   private Role role;
 
   public UserRoleKeys() {}

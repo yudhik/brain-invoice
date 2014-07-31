@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.PrimaryKeyJoinColumns;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,7 +28,7 @@ import com.brainmaster.util.DatabaseColumnConstant;
 @Table(name = "product_store_price_accumulation")
 @NamedQueries({@NamedQuery(
     name = "latest-product-store-average-price",
-    query = "from ProductStorePriceAccumulation a where a.productStore = :productStore "
+    query = "select a from ProductStorePriceAccumulation a where a.productStore = :productStore "
         + "and a.transactionDate = (select MAX(b.transactionDate) from ProductStorePriceAccumulation b where b.productStore = :productStore)")})
 public class ProductStorePriceAccumulation extends AbstractCreateByEntity implements Serializable {
 
@@ -38,7 +40,9 @@ public class ProductStorePriceAccumulation extends AbstractCreateByEntity implem
   private UUID priceAccumulationId;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_store_id")
+  @PrimaryKeyJoinColumns({
+      @PrimaryKeyJoinColumn(name = "product_code", referencedColumnName = "product_code"),
+      @PrimaryKeyJoinColumn(name = "store_id", referencedColumnName = "store_id")})
   private ProductStore productStore;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = true)

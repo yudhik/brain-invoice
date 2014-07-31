@@ -100,7 +100,7 @@ public class IntegrationModelTest extends Arquillian {
   public void testCreatingBrand() {
     User user = repositoryBean.getUser(EMAIL_ACCOUNT_ID, true);
     Brand brand = repositoryBean.save(new Brand(user.getAccount(), BRAND_NAME, user, null));
-    Assert.assertNotNull(brand.getKeys().getBrandName(), "brand name is null");
+    Assert.assertNotNull(brand.getBrandName(), "brand name is null");
     Assert.assertEquals(
         repositoryBean.getAllBrandFromAccount(repositoryBean.getAccountFromKey(ACCOUNT_UUID))
             .size(), 1);
@@ -113,7 +113,7 @@ public class IntegrationModelTest extends Arquillian {
     Account account = user.getAccount();
     Assert.assertNotNull(account.getAccountId(), "account id is null");
     Category category = repositoryBean.save(new Category(account, CATEGORY_NAME, user, null));
-    Assert.assertNotNull(category.getKeys().getCategoryName(), "category name is null");
+    Assert.assertNotNull(category.getCategoryName(), "category name is null");
     Assert.assertEquals(
         repositoryBean.getAllCategoryFromAccount(repositoryBean.getAccountFromKey(ACCOUNT_UUID))
             .size(), 1);
@@ -128,8 +128,8 @@ public class IntegrationModelTest extends Arquillian {
     Category category = new Category(account, CATEGORY_NAME + "A", user, null);
     Category categoryChild =
         repositoryBean.save(new Category(account, CATEGORY_NAME + "A1", category, user, null));
-    Assert.assertNotNull(category.getKeys().getCategoryName(), "parent category name is null");
-    Assert.assertNotNull(categoryChild.getKeys().getCategoryName(), "parent category name is null");
+    Assert.assertNotNull(category.getCategoryName(), "parent category name is null");
+    Assert.assertNotNull(categoryChild.getCategoryName(), "parent category name is null");
     Assert.assertEquals(
         repositoryBean.getAllCategoryFromAccount(repositoryBean.getAccountFromKey(ACCOUNT_UUID))
             .size(), 3);
@@ -146,7 +146,7 @@ public class IntegrationModelTest extends Arquillian {
     PackagingUnit packagingUnit =
         repositoryBean.save(new PackagingUnit(new PackagingAccountKeys(account, PACKAGING_CODE),
             "Kilogram", user, null));
-    Assert.assertNotNull(packagingUnit.getKeys().getPackagingId(), "packaging name is null");
+    Assert.assertNotNull(packagingUnit.getPackagingId(), "packaging name is null");
     Assert.assertEquals(
         repositoryBean.getAllPackagingFromAccount(repositoryBean.getAccountFromKey(ACCOUNT_UUID))
             .size(), 1);

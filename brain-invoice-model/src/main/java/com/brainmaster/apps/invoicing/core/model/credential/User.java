@@ -33,7 +33,7 @@ import com.brainmaster.util.DatabaseColumnConstant;
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = {"email_address",
     "account_id"}))
 @NamedQueries({@NamedQuery(name = "user-with-email",
-    query = "from User a where a.emailAddress = :email")})
+    query = "select a from User a where a.emailAddress = :email")})
 public class User extends AbstractIdentityType implements org.picketlink.idm.model.Account {
 
   private static final long serialVersionUID = 6862888645550391162L;
@@ -72,7 +72,7 @@ public class User extends AbstractIdentityType implements org.picketlink.idm.mod
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<UserStore> userStores = new ArrayList<UserStore>();
 
-  @OneToMany(mappedBy = "userRoleId.user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<UserRole> userRoles = new ArrayList<UserRole>();
 
   @ManyToOne

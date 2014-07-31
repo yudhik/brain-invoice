@@ -21,7 +21,9 @@ public class BrandServiceBean extends AbstractServiceBean {
 
   public void delete(Brand brand) throws Exception {
     log.debug("deleting brand : {}", brand);
-    Brand savedBrand = getEntityManager().find(Brand.class, brand.getKeys());
+    Brand savedBrand =
+        getEntityManager().find(Brand.class,
+            new BrandAccountKeys(brand.getAccount(), brand.getBrandName()));
     if (savedBrand != null) {
       getEntityManager().remove(savedBrand);
     } else {
@@ -54,7 +56,8 @@ public class BrandServiceBean extends AbstractServiceBean {
 
   public Brand save(Brand brand) throws Exception {
     log.debug("saving brand : {}", brand);
-    Brand savedBrand = getBrandFromKey(brand.getKeys());
+    Brand savedBrand =
+        getBrandFromKey(new BrandAccountKeys(brand.getAccount(), brand.getBrandName()));
     if (savedBrand != null) {
       BeanUtils.copyProperties(savedBrand, brand);
       brand = getEntityManager().merge(savedBrand);

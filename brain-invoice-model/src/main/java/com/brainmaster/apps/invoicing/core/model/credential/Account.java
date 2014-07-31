@@ -36,7 +36,7 @@ import com.brainmaster.util.types.UUIDType;
 @Entity
 @TypeDefs({@TypeDef(name = "uuid", typeClass = UUIDType.class)})
 @Table(name = "account")
-@NamedQuery(name = "all-account", query = "from Account")
+@NamedQuery(name = "all-account", query = "select a from Account a")
 public class Account extends AbstractIdentityType {
 
   private static final long serialVersionUID = 5856204102955357752L;
@@ -60,13 +60,13 @@ public class Account extends AbstractIdentityType {
   @AttributeProperty
   private String registrationLastName;
 
-  @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Brand> brands = new ArrayList<Brand>();
 
-  @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Category> categories = new ArrayList<Category>();
 
-  @OneToMany(mappedBy = "keys.account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<PackagingUnit> packagingUnits = new ArrayList<PackagingUnit>();
 
   @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

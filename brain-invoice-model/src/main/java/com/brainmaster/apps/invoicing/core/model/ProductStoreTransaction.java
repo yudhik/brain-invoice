@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.PrimaryKeyJoinColumns;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,7 +29,7 @@ import com.brainmaster.util.DatabaseColumnConstant;
     columnNames = {"transaction_hash"}))
 @NamedQueries({@NamedQuery(
     name = "latest-product-store-quantity-transaction",
-    query = "from ProductStoreTransaction a where a.productStore = :productStore "
+    query = "select a from ProductStoreTransaction a where a.productStore = :productStore "
         + "and a.transactionDate = (select MAX(b.transactionDate) from ProductStoreTransaction b where b.productStore = :productStore)")})
 public class ProductStoreTransaction extends AbstractCreateByEntity implements Serializable {
 
@@ -42,7 +44,9 @@ public class ProductStoreTransaction extends AbstractCreateByEntity implements S
   private String transactionHashCode;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_store_id", nullable = false)
+  @PrimaryKeyJoinColumns({
+      @PrimaryKeyJoinColumn(name = "product_code", referencedColumnName = "product_code"),
+      @PrimaryKeyJoinColumn(name = "store_id", referencedColumnName = "store_id")})
   private ProductStore productStore;
 
   @Column(name = "transaction_date")

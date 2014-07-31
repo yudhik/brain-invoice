@@ -3,46 +3,42 @@ package com.brainmaster.apps.invoicing.core.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.PrimaryKeyJoinColumns;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.Type;
 
 import com.brainmaster.apps.invoicing.core.model.credential.Account;
 import com.brainmaster.apps.invoicing.core.model.credential.User;
-import com.brainmaster.util.helper.uuid.UUIDHelper;
+import com.brainmaster.apps.invoicing.core.model.id.ProductAccountKeys;
 
 @Entity
-@Table(name = "product", uniqueConstraints = @UniqueConstraint(columnNames = {"product_id",
-    "product_code", "account_id"}))
+@IdClass(ProductAccountKeys.class)
+@Table(name = "product", uniqueConstraints = @UniqueConstraint(columnNames = {"product_code",
+    "account_id"}))
 @NamedQueries({@NamedQuery(name = "product-with-code",
-    query = "from Product a where a.productCode = :productCode and a.account = :account")})
+    query = "select a from Product a where a.productCode = :productCode and a.account = :account")})
 public class Product extends AbstractUpdateBy implements Serializable {
 
   private static final long serialVersionUID = -2520437947468554143L;
 
   @Id
-  @Type(type = "uuid")
-  @Column(name = "product_id", unique = true)
-  private UUID productId;
-
   @Column(name = "product_code")
   private String productCode;
 
+  @Id
   @ManyToOne(targetEntity = Account.class)
   @JoinColumn(name = "account_id")
   private Account account;
@@ -54,15 +50,21 @@ public class Product extends AbstractUpdateBy implements Serializable {
   private String barcodeNumber;
 
   @ManyToOne(targetEntity = PackagingUnit.class, fetch = FetchType.LAZY)
-  @JoinColumns({@JoinColumn(name = "packaging_id"), @JoinColumn(name = "packaging_account_id")})
+  @PrimaryKeyJoinColumns({
+      @PrimaryKeyJoinColumn(name = "packaging_id", referencedColumnName = "packaging_id"),
+      @PrimaryKeyJoinColumn(name = "account_id", referencedColumnName = "account_id")})
   private PackagingUnit packageCode;
 
   @ManyToOne(targetEntity = Brand.class, fetch = FetchType.LAZY)
-  @JoinColumns({@JoinColumn(name = "brand_name"), @JoinColumn(name = "brand_account_id")})
+  @PrimaryKeyJoinColumns({
+      @PrimaryKeyJoinColumn(name = "brand_name", referencedColumnName = "brand_name"),
+      @PrimaryKeyJoinColumn(name = "account_id", referencedColumnName = "account_id")})
   private Brand brand;
 
   @ManyToOne(targetEntity = Category.class, fetch = FetchType.LAZY)
-  @JoinColumns({@JoinColumn(name = "category_name"), @JoinColumn(name = "category_account_id")})
+  @PrimaryKeyJoinColumns({
+      @PrimaryKeyJoinColumn(name = "category_name", referencedColumnName = "category_name"),
+      @PrimaryKeyJoinColumn(name = "account_id", referencedColumnName = "account_id")})
   private Category category;
 
   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -76,7 +78,6 @@ public class Product extends AbstractUpdateBy implements Serializable {
   public Product(Account account, String productCode, String productName, String barcodeNumber,
       Brand brand, Category category, PackagingUnit packageCode, User createdBy, User updatedBy) {
     super(createdBy, updatedBy);
-    this.productId = UUID.randomUUID();
     this.account = account;
     this.productCode = productCode;
     this.productName = productName;
@@ -147,17 +148,6 @@ public class Product extends AbstractUpdateBy implements Serializable {
     return productCode;
   }
 
-  public UUID getProductId() {
-    return productId;
-  }
-
-  @Transient
-  public String getProductIdInString() {
-    if (productId != null)
-      return UUIDHelper.uuidToString(productId);
-    return null;
-  }
-
   public String getProductName() {
     return productName;
   }
@@ -202,10 +192,6 @@ public class Product extends AbstractUpdateBy implements Serializable {
     this.productCode = productCode;
   }
 
-  public void setProductId(UUID productId) {
-    this.productId = productId;
-  }
-
   public void setProductName(String productName) {
     this.productName = productName;
   }
@@ -217,9 +203,8 @@ public class Product extends AbstractUpdateBy implements Serializable {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("Product [productId=");
-    builder.append(getProductIdInString());
-    builder.append(", productCode=");
+    builder.append("Product [");
+    builder.append("productCode=");
     builder.append(productCode);
     builder.append(", account=");
     builder.append(account);

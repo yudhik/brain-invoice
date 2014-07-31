@@ -65,6 +65,11 @@ public class InvoiceTransaction extends AbstractCreateByEntity implements Serial
   @OneToMany(mappedBy = "invoiceTransaction", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<InvoiceTransactionDetail> transactions = new ArrayList<InvoiceTransactionDetail>();
 
+  @Deprecated
+  public InvoiceTransaction() {
+    super(null);
+  }
+
   public InvoiceTransaction(User createdBy) {
     super(createdBy);
   }

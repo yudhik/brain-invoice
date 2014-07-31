@@ -1,18 +1,15 @@
 package com.brainmaster.apps.invoicing.core.model.id;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.brainmaster.apps.invoicing.core.model.credential.Account;
 
-@MappedSuperclass
-public abstract class AccountKeys {
+public abstract class AccountKeys implements Serializable {
 
-  @ManyToOne(targetEntity = Account.class)
-  @JoinColumn(name = "account_id")
+  private static final long serialVersionUID = -4948208035246922556L;
+
   private Account account;
 
   @Deprecated

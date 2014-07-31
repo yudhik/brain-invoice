@@ -28,7 +28,7 @@ public class Role extends AbstractIdentityType {
   @Column(length = 75, nullable = false)
   private String description;
 
-  @OneToMany(mappedBy = "userRoleId.role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<UserRole> userRoles = new ArrayList<UserRole>();
 
   public Role() {}
